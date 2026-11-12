@@ -66,8 +66,6 @@ Dois conjuntos do Kaggle (Gehring-Homberger, CC BY 4.0, e entregas de e-commerce
 convenções de arredondamento em `dados/README.md`. A prioridade dos clientes é sintética (semente fixa) e a rede viária é
 construída a partir das coordenadas; ambas são declaradas como tais nos resultados.
 
-# Dados
-
 Instâncias reais de referência (benchmarks) usadas nos testes e nos experimentos.
 Os arquivos `.sol` trazem a melhor solução conhecida (BKS) e servem como referência independente.
 
