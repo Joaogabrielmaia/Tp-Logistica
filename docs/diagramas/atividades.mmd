@@ -1,0 +1,27 @@
+flowchart TB
+subgraph S1 [Preparação e construção]
+direction LR
+A([Início]) --> B[Ler instância e montar grafo]
+B --> C{Todos os clientes alcançam o depósito?}
+C -- não --> X([Erro: clientes isolados])
+C -- sim --> D{Algum cliente inviável sozinho?}
+D -- sim --> Y([Erro: cliente impossível])
+D -- não --> E[Economias de Clarke-Wright]
+D -- não --> F[Inserção sequencial de Solomon]
+E --> G[Escolher a melhor construção]
+F --> G
+end
+subgraph S2 [Otimização e verificação]
+direction LR
+H[Busca local: realocar, inverter, trocar, trocar caudas] --> I{Iterações restantes e dentro do tempo limite?}
+I -- sim --> J[Ruína de strings adjacentes]
+J --> K[Recriação por melhor inserção viável]
+K --> L{Aceita pelo recozimento?}
+L -- sim --> M[Atualizar solução atual e melhor]
+L -- não --> I
+M --> I
+I -- não --> N[Polimento final]
+N --> O[Verificação independente]
+O --> P([Rotas, cargas, tempos e métricas])
+end
+G --> H
