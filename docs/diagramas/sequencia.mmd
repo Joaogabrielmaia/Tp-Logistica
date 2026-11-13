@@ -1,0 +1,17 @@
+sequenceDiagram
+autonumber
+actor U as Planejador
+participant W as Interface web
+participant S as Servico
+participant R as Solver
+participant V as Verificador
+U->>W: instância, grafo e restrições
+W->>S: POST /api/resolver
+S->>S: carrega e confere alcançabilidade
+S->>R: resolver(instância, parâmetros)
+R->>R: economias, inserção, busca local, ruína e recriação
+R-->>S: Resultado
+S->>V: verificar(rotas, custo)
+V-->>S: Relatorio independente
+S-->>W: rotas, tempos, cargas e verificação
+W-->>U: mapa, cronograma e carga
