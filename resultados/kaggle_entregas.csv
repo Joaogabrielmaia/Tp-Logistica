@@ -1,0 +1,14 @@
+entregas,grafo,metodo,peso_prioridade,distancia_km,veiculos,atraso_medio_alta_min,atraso_medio_media_min,atraso_medio_baixa_min,tempo_s,verificada
+100,completo,completo,0.0,557.37,6,188.11,207.52,190.65,0.54,sim
+100,completo,completo,0.01,587.32,6,56.81,91.42,115.66,0.9,sim
+100,completo,completo,0.05,719.91,7,3.34,3.16,47.8,1.41,sim
+200,completo,completo,0.0,844.52,12,146.31,230.69,237.33,1.19,sim
+200,completo,completo,0.01,943.69,12,41.89,75.75,114.35,2.84,sim
+200,completo,completo,0.05,1183.34,11,9.77,6.99,33.41,4.48,sim
+500,completo,completo,0.0,1649.04,29,228.33,246.35,228.58,8.61,sim
+500,completo,completo,0.01,1872.18,31,23.22,39.92,74.04,40.34,sim
+500,completo,completo,0.05,2339.57,26,6.97,12.36,24.9,25.57,sim
+1000,completo,busca local,0.0,3046.68,61,217.42,231.52,239.93,49.94,sim
+1000,completo,busca local,0.01,3790.21,50,33.34,55.38,77.86,39.88,sim
+1000,completo,busca local,0.05,5311.45,50,11.85,14.99,26.15,75.44,sim
+200,viario,completo,0.0,1137.12,13,127.21,198.51,229.94,1.3,sim
