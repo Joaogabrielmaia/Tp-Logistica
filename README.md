@@ -28,12 +28,20 @@ python main.py resolver dados/solomon/RC101.vrp --prioridades --peso-prioridade 
 python main.py resolver dados/cvrp-x/X-n101-k25.vrp --modo viario
 python main.py resolver dados/kaggle/gehring-homberger/c1_2_1.txt --iteracoes 2000
 python main.py resolver dados/kaggle/ecommerce/entregas.csv --iteracoes 500
+python main.py resolver dados/solomon/R101.vrp --modo viario --mao-unica 0.3
+python main.py caminho dados/solomon/R101.vrp 0 15 --modo viario
+python main.py caminho --arestas "A B 4; A C 1; C B 1; B D 1" A D
+python main.py grafo dados/solomon/R101.vrp --modo viario --mostrar-agm
 python main.py benchmark todos
 python -m unittest discover -s testes -t .
 ```
 
 `python main.py` abre a interface web em `http://127.0.0.1:8000`. Ela permite escolher a instância (ou gerar/enviar uma),
 o modo do grafo, as restrições e o número de iterações, e mostra mapa, cronograma, carga, convergência e experimentos.
+A aba Caminhos compara os algoritmos de caminho entre dois vértices, no grafo da instância ou num grafo digitado.
+
+Erros (arquivo inválido, parâmetro fora do intervalo, cliente impossível de atender, vértice inexistente) aparecem
+sempre em três partes, na tela e no terminal: o que aconteceu, por quê e o que fazer. Nenhum erro conhecido mostra traceback.
 
 ## Modelagem
 
@@ -43,7 +51,7 @@ pelo depósito e a solução é uma partição dos clientes em rotas viáveis.
 | Modo | Construção | Custos |
 |---|---|---|
 | `completo` | arco entre todo par de pontos | distância euclidiana com a regra de arredondamento da base |
-| `viario` | k vizinhos mais próximos + árvore geradora mínima (Kruskal, union-find) | caminhos mínimos por Dijkstra |
+| `viario` | k vizinhos mais próximos + árvore geradora mínima (Kruskal, union-find); `--mao-unica` torna parte das ruas de mão única | caminhos mínimos por Dijkstra |
 
 Restrições: capacidade, janelas de tempo com espera, distância máxima por rota, frota máxima, custo fixo por veículo e
 prioridade (peso `λ` sobre o instante de início do atendimento, com pesos 3, 2 e 1 para prioridade alta, média e baixa).
@@ -58,6 +66,8 @@ prioridade (peso `λ` sobre o instante de início do atendimento, com pesos 3, 2
 | Avaliação | Folgas de tempo (inserção viável em O(1)) | `logistica/avaliacao.py` |
 | Melhoria | Busca local e ruína e recriação com recozimento simulado | `logistica/busca_local.py`, `logistica/otimizador.py` |
 | Validação | Verificador independente (Bellman-Ford) e solver exato | `logistica/verificador.py`, `logistica/exato.py` |
+| Caminho entre dois vértices | BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall, lado a lado | `logistica/caminhos.py`, `logistica/consulta.py` |
+| Explicação de erros | o que houve, por quê e o que fazer | `logistica/erros.py` |
 
 ## Estrutura
 
