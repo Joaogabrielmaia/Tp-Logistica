@@ -14,4 +14,4 @@ Cada CSV aqui foi gerado por `python main.py benchmark <nome>` (ou `todos`). As 
 | `prioridade.csv` | Efeito do peso λ da prioridade no horário de atendimento dos clientes urgentes. |
 | `exato.csv` | Heurística contra o solver exato em 50 instâncias de 8 clientes. |
 
-Em todas as linhas a coluna `verificada` diz se a solução passou no verificador independente. Todas passaram.
+Nos arquivos que têm a coluna `verificada` (`solomon`, `cvrp_x`, `kaggle_gh`, `kaggle_entregas`, `escala` e `grafo_viario`), ela diz se a solução passou no verificador independente, e todas passaram. `solomon.csv` e `cvrp_x.csv` terminam com uma linha de resumo.
