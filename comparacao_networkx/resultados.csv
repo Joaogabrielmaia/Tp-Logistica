@@ -1,0 +1,35 @@
+instancia,vertices,arcos,algoritmo,respostas_iguais,maior_diferenca,tempo_nosso_s,tempo_networkx_s,razao_nosso_sobre_nx,observacao
+R101 (rede viária),101,634,"Dijkstra, uma origem",sim,0.00e+00,0.0001,0.0001,0.42,
+R101 (rede viária),101,634,"Dijkstra, todas as origens (matriz)",sim,0.00e+00,0.0063,0.0139,0.45,
+R101 (rede viária),101,634,A* (0 até 100),sim,0.00e+00,0.0001,0.0001,1.93,na NetworkX sem heurística (equivale ao Dijkstra); a nossa usa a linha reta
+R101 (rede viária),101,634,"Bellman-Ford, uma origem",sim,0.00e+00,0.0002,0.0004,0.40,
+R101 (rede viária),101,634,"Floyd-Warshall, todos os pares",sim,0.00e+00,0.0227,0.0600,0.38,
+R101 (rede viária),101,634,Kruskal (peso da árvore geradora mínima),sim,0.00e+00,0.0001,0.0005,0.27,
+R101 (rede viária),101,634,BFS (fortemente conexo?),sim,0.00e+00,0.0002,0.0001,2.75,as duas respostas: sim
+C101 (rede viária),101,636,"Dijkstra, uma origem",sim,0.00e+00,0.0001,0.0001,0.47,
+C101 (rede viária),101,636,"Dijkstra, todas as origens (matriz)",sim,0.00e+00,0.0063,0.0134,0.47,
+C101 (rede viária),101,636,A* (0 até 100),sim,0.00e+00,0.0002,0.0001,1.71,na NetworkX sem heurística (equivale ao Dijkstra); a nossa usa a linha reta
+C101 (rede viária),101,636,"Bellman-Ford, uma origem",sim,0.00e+00,0.0004,0.0003,1.30,
+C101 (rede viária),101,636,"Floyd-Warshall, todos os pares",sim,0.00e+00,0.0087,0.0562,0.15,
+C101 (rede viária),101,636,Kruskal (peso da árvore geradora mínima),sim,0.00e+00,0.0001,0.0004,0.27,
+C101 (rede viária),101,636,BFS (fortemente conexo?),sim,0.00e+00,0.0002,0.0001,2.60,as duas respostas: sim
+c1_2_1 (rede viária),201,1266,"Dijkstra, uma origem",sim,0.00e+00,0.0001,0.0002,0.49,
+c1_2_1 (rede viária),201,1266,"Dijkstra, todas as origens (matriz)",sim,0.00e+00,0.0275,0.0639,0.43,
+c1_2_1 (rede viária),201,1266,A* (0 até 200),sim,0.00e+00,0.0003,0.0002,1.69,na NetworkX sem heurística (equivale ao Dijkstra); a nossa usa a linha reta
+c1_2_1 (rede viária),201,1266,"Bellman-Ford, uma origem",sim,0.00e+00,0.0004,0.0004,1.07,
+c1_2_1 (rede viária),201,1266,"Floyd-Warshall, todos os pares",sim,0.00e+00,0.0571,0.4436,0.13,
+c1_2_1 (rede viária),201,1266,Kruskal (peso da árvore geradora mínima),sim,0.00e+00,0.0003,0.0011,0.26,
+c1_2_1 (rede viária),201,1266,BFS (fortemente conexo?),sim,0.00e+00,0.0004,0.0002,2.56,as duas respostas: sim
+c1_4_1 (rede viária),401,2586,"Dijkstra, uma origem",sim,0.00e+00,0.0003,0.0006,0.45,
+c1_4_1 (rede viária),401,2586,"Dijkstra, todas as origens (matriz)",sim,0.00e+00,0.1165,0.2724,0.43,
+c1_4_1 (rede viária),401,2586,A* (0 até 400),sim,0.00e+00,0.0006,0.0003,1.76,na NetworkX sem heurística (equivale ao Dijkstra); a nossa usa a linha reta
+c1_4_1 (rede viária),401,2586,"Bellman-Ford, uma origem",sim,0.00e+00,0.0036,0.0012,3.05,
+c1_4_1 (rede viária),401,2586,Kruskal (peso da árvore geradora mínima),sim,0.00e+00,0.0006,0.0021,0.26,
+c1_4_1 (rede viária),401,2586,BFS (fortemente conexo?),sim,0.00e+00,0.0008,0.0003,2.36,as duas respostas: sim
+entregas (rede viária),1001,5968,"Dijkstra, uma origem",sim,0.00e+00,0.0009,0.0023,0.39,
+entregas (rede viária),1001,5968,"Dijkstra, todas as origens (matriz)",sim,0.00e+00,0.8855,2.0462,0.43,
+entregas (rede viária),1001,5968,A* (0 até 1000),sim,0.00e+00,0.0019,0.0004,5.40,na NetworkX sem heurística (equivale ao Dijkstra); a nossa usa a linha reta
+entregas (rede viária),1001,5968,"Bellman-Ford, uma origem",sim,0.00e+00,0.0060,0.0045,1.35,
+entregas (rede viária),1001,5968,Kruskal (peso da árvore geradora mínima),sim,0.00e+00,0.0022,0.0063,0.36,
+entregas (rede viária),1001,5968,BFS (fortemente conexo?),sim,0.00e+00,0.0024,0.0010,2.30,as duas respostas: sim
+200 grafos aleatórios com peso negativo,3 a 12,-,Bellman-Ford (distância ou ciclo negativo),sim,0.00e+00,0.0023,0.0035,0.66,200 de 200 iguais; 67 tinham ciclo negativo
