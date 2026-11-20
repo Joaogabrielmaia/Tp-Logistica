@@ -226,7 +226,7 @@ Nas \xN{} instâncias sem janelas, de 101 a 303 clientes (Tabela~\ref{tab:cvrp})
 
 \subsection{Contribuição de cada componente}
 
-A Tabela~\ref{tab:abl} mostra a diferença após cada etapa. A melhor construção inicial fica de \ablConstrMin\% a \ablConstrMax\% acima da BKS; a busca local leva essa diferença para \ablLocalMin\% a \ablLocalMax\%, e a ruína e recriação, para \ablFinalMin\% a \ablFinalMax\%. Uma etapa nunca piorou a anterior: \ablNuncaPiorou. Nas instâncias de Solomon C101 e C201 a inserção sequencial já iguala a BKS, e nas demais a ruína e recriação dá a maior parte do ganho.
+A Tabela~\ref{tab:abl} mostra a diferença após cada etapa. A melhor construção inicial fica de \ablConstrMin\% a \ablConstrMax\% acima da BKS; a busca local leva essa diferença para \ablLocalMin\% a \ablLocalMax\%, e a ruína e recriação, para \ablFinalMin\% a \ablFinalMax\%. Em todas as instâncias da tabela, \ablNuncaPiorou. Nas instâncias de Solomon C101 e C201 a inserção sequencial já iguala a BKS, e nas demais a ruína e recriação dá a maior parte do ganho.
 
 \begin{table}[!ht]
 \centering
@@ -238,7 +238,7 @@ A Tabela~\ref{tab:abl} mostra a diferença após cada etapa. A melhor construç�
 
 \subsection{Escalabilidade}
 
-A Tabela~\ref{tab:esc} e a Figura~\ref{fig:esc} medem o tempo em instâncias sintéticas de 25 a 400 clientes. O grafo completo tem $O(n^2)$ arcos e a rede viária só $O(n)$ (\viarioArcosViario{} contra \viarioArcosCompleto{} arcos com 80 clientes). Os expoentes ajustados aos tempos medidos foram \expCompleto{} para construir o grafo completo, \expViario{} para a rede viária com Dijkstra, \expConstr{} para as construções com busca local e \expIter{} para mil iterações de ruína e recriação. A busca local é o gargalo prático e cresce mais rápido que a análise por iteração sugere, porque cada passada examina todas as realocações e trocas; para milhares de clientes seria preciso limitar as vizinhanças, o que não foi feito. Todas as soluções desta tabela foram aprovadas pela verificação independente: \escalaTodasVerificadas.
+A Tabela~\ref{tab:esc} e a Figura~\ref{fig:esc} medem o tempo em instâncias sintéticas de 25 a 400 clientes. O grafo completo tem $O(n^2)$ arcos e a rede viária só $O(n)$ (\viarioArcosViario{} contra \viarioArcosCompleto{} arcos com 80 clientes). Os expoentes ajustados aos tempos medidos foram \expCompleto{} para construir o grafo completo, \expViario{} para a rede viária com Dijkstra, \expConstr{} para as construções com busca local e \expIter{} para mil iterações de ruína e recriação. A busca local é o gargalo prático e cresce mais rápido que a análise por iteração sugere, porque cada passada examina todas as realocações e trocas; para milhares de clientes seria preciso limitar as vizinhanças, o que não foi feito. Na verificação independente, \escalaTodasVerificadas.
 
 \begin{table}[!ht]
 \centering

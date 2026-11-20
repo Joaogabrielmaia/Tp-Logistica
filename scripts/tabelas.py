@@ -80,7 +80,7 @@ def gerar():
     saida += macro("ablFinalMin", fmt(min(finais), 1))
     saida += macro("ablFinalMax", fmt(max(finais), 1))
     nunca_piorou = all(l_ <= c_ + 1e-9 and f_ <= l_ + 1e-9 for c_, l_, f_ in zip(melhores, locais, finais))
-    saida += macro("ablNuncaPiorou", "sim" if nunca_piorou else "não")
+    saida += macro("ablNuncaPiorou", "nenhuma etapa piorou a anterior" if nunca_piorou else "alguma etapa piorou a anterior")
     es = ler("escala")
     def inclinacao(chave):
         import math
@@ -94,7 +94,7 @@ def gerar():
     saida += macro("expCompleto", fmt(inclinacao("construir_completo_s"), 1))
     linhas = [[l["clientes"], l["arcos_grafo_completo"], l["arcos_rede_viaria"], l["construir_completo_s"], l["construir_viario_dijkstra_s"], l["construtivo_e_busca_local_s"], l["mil_iteracoes_s"]] for l in es]
     saida += "\\newcommand{\\tabEscala}{\n" + tabela(["$n$", "Arcos (completo)", "Arcos (viário)", "Grafo completo", "Viário + Dijkstra", "Constr. + busca local", "1000 iter."], linhas, "rrrrrrr") + "}\n"
-    saida += macro("escalaTodasVerificadas", "sim" if all(l["verificada"] == "sim" for l in es) else "não")
+    saida += macro("escalaTodasVerificadas", "todas as soluções desta tabela foram aprovadas" if all(l["verificada"] == "sim" for l in es) else "nem todas as soluções desta tabela foram aprovadas")
     gv = ler("grafo_viario")
     ac = [num(l["acrescimo_percentual"]) for l in gv]
     saida += macro("viarioAcrescimoMedio", fmt(statistics.mean(ac), 1))
