@@ -187,8 +187,13 @@ def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
     if custos:
         menor = min(custos.values())
         iguais = all(abs(c - menor) < 1e-6 for c in custos.values())
-        nomes = ", ".join(NOMES[a] for a in custos)
-        conclusao = ("%s chegaram ao mesmo menor custo, %s." % (nomes, _fmt(menor))) if iguais else ("os algoritmos de menor custo divergiram: %s" % custos)
+        lista = [NOMES[a] for a in custos]
+        if len(lista) == 1:
+            conclusao = "%s encontrou o menor custo, %s." % (lista[0], _fmt(menor))
+        elif iguais:
+            conclusao = "%s e %s chegaram ao mesmo menor custo, %s." % (", ".join(lista[:-1]), lista[-1], _fmt(menor))
+        else:
+            conclusao = "os algoritmos de menor custo divergiram: " + ", ".join("%s %s" % (NOMES[a], _fmt(c)) for a, c in custos.items())
     elif any(l["situacao"] == "sem_caminho" for l in linhas):
         conclusao = "não existe caminho de %s até %s neste grafo." % (origem, destino)
     elif any(l["situacao"] == "ciclo_negativo" for l in linhas):
@@ -225,6 +230,7 @@ def resumir_grafo(g):
         "grau_max": max(graus) if graus else 0,
         "fortemente_conexo": fortemente,
         "componentes_fracas": len(fracas),
+        "arcos_mao_unica": sum(1 for u in range(grafo.n) for v, _, _ in grafo.adj[u] if u != v and not grafo.tem_arco(v, u)),
         "agm_peso": sum(p for _, _, p in arvore),
         "agm_arestas": len(arvore),
         "agm_completa": componentes == 1,

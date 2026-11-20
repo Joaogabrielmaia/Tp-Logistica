@@ -75,6 +75,7 @@ function configuracao() {
   return {
     arquivo: $("instancia").value,
     modo: document.querySelector("input[name=modo]:checked").value,
+    mao_unica: Number($("p-mao").value || 0) / 100,
     prioridades: $("prioridades").checked,
     semente_prioridade: 1,
     capacidade: num("p-cap"),
@@ -614,6 +615,7 @@ async function iniciar() {
   $("instancia").addEventListener("change", visualizarInstancia);
   document.querySelectorAll("input[name=modo]").forEach((r) => r.addEventListener("change", visualizarInstancia));
   $("prioridades").addEventListener("change", visualizarInstancia);
+  $("p-mao").addEventListener("change", visualizarInstancia);
   $("mapa").addEventListener("mousemove", dica);
   $("mapa").addEventListener("mouseleave", () => ($("dica").hidden = true));
   window.addEventListener("resize", () => renderMapa());

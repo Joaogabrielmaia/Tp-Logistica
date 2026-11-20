@@ -11,7 +11,7 @@ class ErroInstancia(ValueError):
     pass
 
 
-def construir_instancia(nome, tipo, nos, capacidade, frota, modo="completo", regra="exato", semente=0, k_vizinhos=5, bks_custo=None, bks_rotas=None):
+def construir_instancia(nome, tipo, nos, capacidade, frota, modo="completo", regra="exato", semente=0, k_vizinhos=5, bks_custo=None, bks_rotas=None, mao_unica=0.0):
     if len(nos) < 2:
         raise ErroInstancia("a instância precisa de um depósito e ao menos um cliente")
     predecessores = None
@@ -20,7 +20,7 @@ def construir_instancia(nome, tipo, nos, capacidade, frota, modo="completo", reg
         D = grafo.matriz_pesos()
         T = [linha[:] for linha in D]
     elif modo == "viario":
-        grafo = grafo_viario(nos, k=k_vizinhos, semente=semente, regra=regra)
+        grafo = grafo_viario(nos, k=k_vizinhos, semente=semente, fracao_mao_unica=mao_unica, regra=regra)
         D, T, predecessores = matrizes_de_caminhos(grafo)
     else:
         raise ErroInstancia("modo de grafo desconhecido: " + str(modo))
@@ -61,7 +61,7 @@ def ler_solucao_bks(caminho):
     return rotas, custo
 
 
-def ler_vrplib(caminho, modo="completo", semente=0):
+def ler_vrplib(caminho, modo="completo", semente=0, mao_unica=0.0):
     if not os.path.isfile(caminho):
         raise ErroInstancia("arquivo não encontrado: " + caminho)
     cab, secoes = _ler_secoes(caminho)
@@ -98,10 +98,10 @@ def ler_vrplib(caminho, modo="completo", semente=0):
     sol = os.path.splitext(caminho)[0] + ".sol"
     if os.path.isfile(sol):
         bks_rotas, bks_custo = ler_solucao_bks(sol)
-    return construir_instancia(nome, tipo, nos, capacidade, frota, modo, regra, semente, 5, bks_custo, bks_rotas)
+    return construir_instancia(nome, tipo, nos, capacidade, frota, modo, regra, semente, 5, bks_custo, bks_rotas, mao_unica)
 
 
-def ler_solomon_txt(caminho, modo="completo", semente=0, regra="exato"):
+def ler_solomon_txt(caminho, modo="completo", semente=0, regra="exato", mao_unica=0.0):
     if not os.path.isfile(caminho):
         raise ErroInstancia("arquivo não encontrado: " + caminho)
     with open(caminho, encoding="utf-8", errors="replace") as f:
@@ -134,7 +134,7 @@ def ler_solomon_txt(caminho, modo="completo", semente=0, regra="exato"):
         raise ErroInstancia("o depósito deve ter demanda zero")
     if any(no.demanda > capacidade for no in nos):
         raise ErroInstancia("há cliente com demanda maior que a capacidade do veículo")
-    return construir_instancia(nome, "CVRPTW", nos, capacidade, frota, modo, regra, semente)
+    return construir_instancia(nome, "CVRPTW", nos, capacidade, frota, modo, regra, semente, mao_unica=mao_unica)
 
 
 VELOCIDADE_KMH = 35.0
@@ -142,7 +142,7 @@ CAPACIDADE_ENTREGAS = 500.0
 SERVICO_HORAS = 0.1
 
 
-def ler_entregas_csv(caminho, modo="completo", semente=0, limite=None, capacidade=CAPACIDADE_ENTREGAS):
+def ler_entregas_csv(caminho, modo="completo", semente=0, limite=None, capacidade=CAPACIDADE_ENTREGAS, mao_unica=0.0):
     import csv
     if not os.path.isfile(caminho):
         raise ErroInstancia("arquivo não encontrado: " + caminho)
@@ -184,7 +184,7 @@ def ler_entregas_csv(caminho, modo="completo", semente=0, limite=None, capacidad
         nos.append(No(i, x, y, peso, pronto, fim, SERVICO_HORAS * VELOCIDADE_KMH, prioridade))
     nome = os.path.splitext(os.path.basename(caminho))[0] + ("-%d" % limite if limite else "")
     frota = len(nos) - 1
-    inst = construir_instancia(nome, "CVRPTW", nos, capacidade, frota, modo, "exato", semente)
+    inst = construir_instancia(nome, "CVRPTW", nos, capacidade, frota, modo, "exato", semente, mao_unica=mao_unica)
     inst.prioridade_propria = True
     return inst
 
@@ -192,7 +192,7 @@ def ler_entregas_csv(caminho, modo="completo", semente=0, limite=None, capacidad
 FORMATOS = (".vrp", ".txt", ".csv")
 
 
-def ler_instancia(caminho, modo="completo", semente=0):
+def ler_instancia(caminho, modo="completo", semente=0, mao_unica=0.0):
     ext = os.path.splitext(caminho)[1].lower()
     if ext not in FORMATOS:
         raise ErroInstancia("formato não reconhecido: '%s' (aceitos: .vrp, .txt, .csv)" % (ext or "sem extensão"))
@@ -202,10 +202,10 @@ def ler_instancia(caminho, modo="completo", semente=0):
         raise ErroInstancia("arquivo vazio: " + caminho)
     try:
         if ext == ".txt":
-            return ler_solomon_txt(caminho, modo, semente)
+            return ler_solomon_txt(caminho, modo, semente, mao_unica=mao_unica)
         if ext == ".csv":
-            return ler_entregas_csv(caminho, modo, semente)
-        return ler_vrplib(caminho, modo, semente)
+            return ler_entregas_csv(caminho, modo, semente, mao_unica=mao_unica)
+        return ler_vrplib(caminho, modo, semente, mao_unica)
     except ErroInstancia:
         raise
     except UnicodeDecodeError:
@@ -217,7 +217,7 @@ def ler_instancia(caminho, modo="completo", semente=0):
 
 # O grafo é construído antes das janelas de tempo, que partem das distâncias reais; assim todo cliente é atendível
 # individualmente em qualquer modo.
-def gerar_instancia_sintetica(n, semente=0, capacidade=100, frota=None, agrupada=False, janelas=True, modo="completo", lado=100):
+def gerar_instancia_sintetica(n, semente=0, capacidade=100, frota=None, agrupada=False, janelas=True, modo="completo", lado=100, mao_unica=0.0):
     rng = random.Random(semente)
     nos = [No(0, lado / 2, lado / 2, 0, 0.0, math.inf, 0.0, 3)]
     centros = [(rng.uniform(0, lado), rng.uniform(0, lado)) for _ in range(max(2, n // 15))]
@@ -236,7 +236,7 @@ def gerar_instancia_sintetica(n, semente=0, capacidade=100, frota=None, agrupada
     total = sum(no.demanda for no in nos)
     if frota is None:
         frota = max(2, int(math.ceil(total / capacidade * 1.8)) + 2)
-    inst = construir_instancia("sintetica-n%d-s%d" % (n, semente), "CVRPTW" if janelas else "CVRP", nos, capacidade, frota, modo, "exato", semente)
+    inst = construir_instancia("sintetica-n%d-s%d" % (n, semente), "CVRPTW" if janelas else "CVRP", nos, capacidade, frota, modo, "exato", semente, mao_unica=mao_unica)
     if janelas:
         D = inst.D
         horizonte = max(lado * 6.0, max(D[0][i] + D[i][0] for i in range(1, n + 1)) + servico + 60.0)

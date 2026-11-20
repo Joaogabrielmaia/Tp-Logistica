@@ -57,10 +57,17 @@ class Servico:
         if not arquivo:
             raise ErroRequisicao("informe a instância")
         semente = int(corpo.get("semente_grafo", 0))
+        mao = float(corpo.get("mao_unica", 0) or 0)
+        if not (0 <= mao <= 1):
+            raise ErroRequisicao("mão única fora do intervalo", "é a porcentagem das ruas que vira mão única, de 0 a 100%.", "escolha um valor entre 0 e 100.")
+        if mao and modo != "viario":
+            raise ErroRequisicao("mão única só existe na rede viária",
+                                 "no grafo completo há arco direto nos dois sentidos entre todo par de pontos.",
+                                 "marque Rede viária no passo 2 ou zere o campo Mão única.")
         if arquivo in self.registro:
             base, bruto = self.registro[arquivo]
-            if modo != base.modo:
-                inst = bruto(modo, semente)
+            if modo != base.modo or mao:
+                inst = bruto(modo, semente, mao)
             else:
                 inst = base
         else:
@@ -69,7 +76,7 @@ class Servico:
             if os.path.commonpath([caminho, os.path.normpath(self.dados)]) != os.path.normpath(self.dados) or not os.path.isfile(caminho):
                 raise ErroRequisicao("instância não encontrada", "só são lidos arquivos dentro da pasta dados/ do projeto.", "escolha a instância na lista ou envie o arquivo pelo botão Enviar.")
             try:
-                inst = ler_instancia(caminho, modo=modo, semente=semente)
+                inst = ler_instancia(caminho, modo=modo, semente=semente, mao_unica=mao)
             except ErroInstancia as e:
                 raise ErroRequisicao.de(e)
         if corpo.get("prioridades"):
@@ -78,9 +85,9 @@ class Servico:
 
     def gerar(self, corpo):
         n = int(corpo.get("n", 40))
-        if not (2 <= n <= LIMITE_CLIENTES_SINTETICOS):
-            raise ErroRequisicao("o número de clientes deve estar entre 2 e %d" % LIMITE_CLIENTES_SINTETICOS,
-                                 "acima de %d clientes a geração e o cálculo deixam de ser interativos em Python; abaixo de 2 não há o que rotear." % LIMITE_CLIENTES_SINTETICOS,
+        if not (1 <= n <= LIMITE_CLIENTES_SINTETICOS):
+            raise ErroRequisicao("o número de clientes deve estar entre 1 e %d" % LIMITE_CLIENTES_SINTETICOS,
+                                 "acima de %d clientes a geração e o cálculo deixam de ser interativos em Python; com 0 clientes não há o que rotear (1 cliente já dá o menor grafo: depósito e cliente)." % LIMITE_CLIENTES_SINTETICOS,
                                  "para instâncias maiores, use as bases de dados/ (por exemplo, kaggle/ecommerce/entregas.csv com 1000 entregas).")
         if float(corpo.get("capacidade", 100)) <= 0:
             raise ErroRequisicao("a capacidade precisa ser positiva", "com capacidade 0 nenhum pedido caberia em um veículo.", "informe um valor maior que 0.")
@@ -89,8 +96,8 @@ class Servico:
         agrupada = bool(corpo.get("agrupada", False))
         janelas = bool(corpo.get("janelas", True))
 
-        def fabricar(modo, sem):
-            return gerar_instancia_sintetica(n, semente=semente, capacidade=capacidade, agrupada=agrupada, janelas=janelas, modo=modo)
+        def fabricar(modo, sem, mao=0.0):
+            return gerar_instancia_sintetica(n, semente=semente, capacidade=capacidade, agrupada=agrupada, janelas=janelas, modo=modo, mao_unica=mao)
 
         inst = fabricar(corpo.get("modo", "completo"), semente)
         with self.trava:
@@ -124,12 +131,12 @@ class Servico:
         nome = str(corpo.get("nome", "enviada"))[:40]
         inst.nome = nome
 
-        def refazer(modo, sem):
+        def refazer(modo, sem, mao=0.0):
             fd2, c2 = tempfile.mkstemp(suffix=extensao)
             try:
                 with os.fdopen(fd2, "w", encoding="utf-8") as f:
                     f.write(conteudo)
-                nova = ler_instancia(c2, modo=modo, semente=sem)
+                nova = ler_instancia(c2, modo=modo, semente=sem, mao_unica=mao)
                 nova.nome = nome
                 return nova
             finally:

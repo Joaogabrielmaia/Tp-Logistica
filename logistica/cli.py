@@ -50,8 +50,19 @@ def _faixa(nome, valor, minimo=None, maximo=None, estrito=False):
             "--tempo-limite": "é o prazo em segundos para o solver; precisa ser positivo (omita para não ter limite).",
             "--peso-prioridade": "λ pesa o atraso dos clientes urgentes; negativo premiaria atender tarde e o custo poderia ficar negativo.",
             "--custo-fixo": "é o custo de usar cada veículo; negativo premiaria usar mais veículos.",
+            "--mao-unica": "é a fração das ruas (fora da árvore geradora mínima) que vira mão única, de 0 a 1.",
+            "--porta": "portas TCP vão de 1 a 65535.",
         }
         raise ErroExplicado("%s = %g fora do intervalo: precisa ser %s" % (nome, valor, limite), motivos.get(nome, ""), "corrija o valor de %s." % nome)
+
+
+def _mao_unica(args):
+    _faixa("--mao-unica", args.mao_unica, 0, 1)
+    if args.mao_unica and args.modo != "viario":
+        raise ErroExplicado("--mao-unica só vale com --modo viario",
+                            "no grafo completo existe arco direto nos dois sentidos entre todo par de pontos; ruas de mão única são uma característica da rede viária.",
+                            "acrescente --modo viario, por exemplo: --modo viario --mao-unica 0.3")
+    return args.mao_unica
 
 
 def _resolver(args):
@@ -62,7 +73,7 @@ def _resolver(args):
     _faixa("--tempo-limite", args.tempo_limite, 0, 3600, estrito=True)
     _faixa("--peso-prioridade", args.peso_prioridade, 0)
     _faixa("--custo-fixo", args.custo_fixo, 0)
-    inst = ler_instancia(args.arquivo, modo=args.modo)
+    inst = ler_instancia(args.arquivo, modo=args.modo, mao_unica=_mao_unica(args))
     if args.prioridades:
         inst = inst.com_prioridades(args.semente_prioridade)
     # "is None" e não "or": um 0 digitado precisa ser validado, não trocado em silêncio pelo valor da instância
@@ -118,7 +129,7 @@ def _grafo_dos_args(args):
         raise ErroExplicado("informe uma instância ou um grafo próprio",
                             "o caminho é calculado sobre um grafo: o de uma instância de dados/ ou um digitado com --arestas.",
                             "exemplos: python main.py caminho dados/solomon/R101.vrp 0 15  |  python main.py caminho --arestas \"A B 1\" A B")
-    return grafo_da_instancia(ler_instancia(args.arquivo, modo=args.modo))
+    return grafo_da_instancia(ler_instancia(args.arquivo, modo=args.modo, mao_unica=_mao_unica(args)))
 
 
 def _caminho(args):
@@ -138,7 +149,7 @@ def _caminho(args):
     if desconhecidos:
         raise ErroExplicado("algoritmo desconhecido: %s" % ", ".join(desconhecidos), "os algoritmos disponíveis são: %s." % ", ".join(ALGORITMOS), "exemplo: --algoritmos dijkstra,bellman_ford")
     r = comparar_caminhos(g, args.origem, args.destino, algoritmos)
-    print("Caminho de %s até %s no %s" % (r["origem"], r["destino"], r["grafo"]))
+    print("Caminho de %s até %s | grafo: %s" % (r["origem"], r["destino"], r["grafo"]))
     for l in r["linhas"]:
         print("\n%s  [%s]" % (l["nome"], l["garante"]))
         if l["caminho"] is not None:
@@ -163,6 +174,7 @@ def _grafo(args):
     print("  vértices: %d | arcos dirigidos: %d (cada aresta de mão dupla conta como 2 arcos)" % (r["vertices"], r["arcos"]))
     print("  grau de saída: mínimo %d, médio %.2f, máximo %d" % (r["grau_min"], r["grau_medio"], r["grau_max"]))
     print("  fortemente conexo (todos alcançam todos): %s" % ("sim" if r["fortemente_conexo"] else "não"))
+    print("  arcos de mão única (sem o arco de volta): %d" % r["arcos_mao_unica"])
     print("  componentes fracamente conexas: %d" % r["componentes_fracas"])
     print("  árvore geradora mínima (Kruskal): %d arestas, peso %.2f%s" % (r["agm_arestas"], r["agm_peso"], "" if r["agm_completa"] else " (floresta: o grafo é desconexo)"))
     if r["tem_peso_negativo"]:
@@ -190,6 +202,7 @@ def _interface(args):
 
 def _adicionar_grafo_proprio(p):
     p.add_argument("--modo", choices=["completo", "viario"], default="completo")
+    p.add_argument("--mao-unica", type=float, default=0.0, help="fração das ruas que vira mão única na rede viária (0 a 1)")
     p.add_argument("--arestas", help="grafo próprio: 'origem destino peso' separados por ';', ex.: \"A B 5; B C 2\"")
     p.add_argument("--grafo-arquivo", help="arquivo de texto com uma aresta por linha")
     p.add_argument("--dirigido", action="store_true", help="arestas de --arestas valem só de origem para destino")
@@ -205,6 +218,7 @@ def principal(argv=None):
     pr = sub.add_parser("resolver", help="resolve uma instância pela linha de comando")
     pr.add_argument("arquivo")
     pr.add_argument("--modo", choices=["completo", "viario"], default="completo")
+    pr.add_argument("--mao-unica", type=float, default=0.0, help="fração das ruas que vira mão única na rede viária (0 a 1)")
     pr.add_argument("--iteracoes", type=int, default=5000)
     pr.add_argument("--semente", type=int, default=1)
     pr.add_argument("--tempo-limite", type=float, help="segundos para todas as etapas do solver")
