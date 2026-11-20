@@ -34,8 +34,9 @@ function definirEstado(texto, ocupado) {
 }
 
 // Mostra o erro em três partes, como o servidor devolve: o que aconteceu, por quê e o que fazer.
-function mostrarAviso(erro) {
+function mostrarAviso(erro, tipo) {
   const a = $("aviso");
+  a.classList.toggle("alerta", tipo === "alerta");
   if (!erro) {
     a.hidden = true;
     a.replaceChildren();
@@ -83,6 +84,7 @@ function configuracao() {
     distancia_maxima: num("p-dmax"),
     custo_fixo: num("p-fixo"),
     peso_prioridade: num("p-peso"),
+    pular_inatendiveis: $("p-pular").checked,
     iteracoes: Number($("p-iter").value),
     tempo_limite: Number($("p-tempo").value),
     semente: Number($("p-semente").value),
@@ -142,6 +144,12 @@ async function resolver() {
     estado.destaque = null;
     renderTudo();
     definirEstado("Concluído em " + fmt(r.resultado.tempo, 2) + " s");
+    if (r.fora && r.fora.length) {
+      const aviso = new Error(r.fora.length + " cliente(s) ficaram de fora: " + r.fora.map((f) => f.cliente).join(", "));
+      aviso.motivo = "cada um é impossível mesmo sozinho. " + r.fora.map((f) => "Cliente " + f.cliente + ": " + f.motivo).join(" | ");
+      aviso.dica = "as rotas mostradas atendem todos os outros e foram aprovadas pelo verificador; para incluí-los, relaxe a restrição citada.";
+      mostrarAviso(aviso, "alerta");
+    }
   } catch (e) {
     mostrarAviso(e);
     definirEstado("Erro");
@@ -180,7 +188,7 @@ function renderKpis() {
     kpi("Veículos", String(x.veiculos), "de " + r.parametros.frota + " disponíveis", x.viavel_frota ? "" : "ruim"),
     kpi("Utilização média", fmt(x.utilizacao_media * 100, 1) + "%", "da capacidade"),
     kpi("Diferença p/ referência", x.gap_bks === null ? "—" : (x.gap_bks >= 0 ? "+" : "") + fmt(x.gap_bks, 2) + "%", x.gap_bks === null ? "sem referência neste cenário" : "melhor solução conhecida"),
-    kpi("Verificação independente", r.verificacao.viavel ? "Aprovada" : "Reprovada", r.verificacao.viavel ? "todas as restrições conferem" : r.verificacao.erros[0], r.verificacao.viavel ? "ok" : "ruim"),
+    kpi("Verificação independente", r.verificacao.viavel ? "Aprovada" : "Reprovada", r.verificacao.viavel ? (r.fora && r.fora.length ? "para os " + (r.instancia.n - r.fora.length) + " clientes atendidos" : "todas as restrições conferem") : r.verificacao.erros[0], r.verificacao.viavel ? "ok" : "ruim"),
     kpi("Tempo", fmt(x.tempo, 2) + " s", x.iteracoes + " iterações" + (x.interrompido ? " (limite de tempo atingido)" : "")),
   );
 }

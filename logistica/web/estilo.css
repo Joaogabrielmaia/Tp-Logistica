@@ -126,6 +126,8 @@ svg text{fill:var(--suave);font-size:11px}
 .aviso b{display:block;margin-bottom:2px}
 .aviso p{margin:4px 0 0;color:var(--texto)}
 .aviso p span{font-weight:650;color:var(--erro)}
+.aviso.alerta{border-color:var(--alerta);color:var(--alerta);background:color-mix(in srgb,var(--alerta) 8%,var(--superficie))}
+.aviso.alerta p span{color:var(--alerta)}
 
 /* Aba Caminhos */
 .caminhos-grade{display:grid;grid-template-columns:330px minmax(0,1fr);gap:14px;align-items:start}
