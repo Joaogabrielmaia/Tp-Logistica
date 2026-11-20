@@ -11,7 +11,8 @@ como um grafo dirigido ponderado. Escrita em Python, só com a biblioteca padrã
 | Relatório final (PDF, template SBC) | [`relatorio/relatorio.pdf`](relatorio/relatorio.pdf) |
 | Documento da Etapa 1 (PDF) | [`docs/etapa1/etapa1.pdf`](docs/etapa1/etapa1.pdf) |
 | Código LaTeX dos relatórios | [`relatorio/relatorio.tex`](relatorio/relatorio.tex), [`docs/etapa1/etapa1.tex`](docs/etapa1/etapa1.tex) |
-| Projeto no Overleaf | *(link a adicionar)* |
+| Overleaf: relatório final | [abrir no Overleaf](https://www.overleaf.com/project/6b00aac124b84befa2a1f30f/share#0c7dd67ecd3bebbe4c59f043ec5f13555ae226be6c33a0ae) |
+| Overleaf: Etapa 1 | [abrir no Overleaf](https://www.overleaf.com/project/6b00ab082077d3cd4f1aaa57/share#fbafc3277976c50dfa71bcb1935806b180efb8e328b35b65) |
 | Zip com o LaTeX dos relatórios (pronto para o Overleaf) | [`entrega/latex_relatorios.zip`](entrega/latex_relatorios.zip) |
 | Slides da apresentação (PDF) | [`apresentacao/slides.pdf`](apresentacao/slides.pdf) |
 | Vídeo de demonstração | *(link a adicionar)* |
