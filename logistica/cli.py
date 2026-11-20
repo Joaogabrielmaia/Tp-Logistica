@@ -28,7 +28,11 @@ def _resolver(args):
     if res.interrompido:
         print("Limite de tempo atingido: a solução mostrada é a melhor encontrada até o prazo.")
     if inst.bks_custo and par.custo_fixo_veiculo == 0 and par.peso_prioridade == 0:
-        print("Melhor conhecida: %.2f | diferença: %+.2f%%" % (inst.bks_custo, (res.distancia / inst.bks_custo - 1) * 100))
+        if inst.modo == "completo":
+            print("Melhor conhecida: %.2f | diferença: %+.2f%%" % (inst.bks_custo, (res.distancia / inst.bks_custo - 1) * 100))
+        else:
+            # a BKS foi calculada em linha reta; na rede viária os trajetos seguem as ruas e a diferença não se compara
+            print("Melhor conhecida (grafo completo): %.2f | não comparável no modo viário" % inst.bks_custo)
     print("Verificação independente: %s" % ("aprovada" if rel.viavel else "REPROVADA"))
     for erro in rel.erros:
         print("  - " + erro)

@@ -226,7 +226,7 @@ class Servico:
                 "ordem_carregamento": list(reversed(rota)),
             })
         gap = None
-        if inst.bks_custo and par.custo_fixo_veiculo == 0 and par.peso_prioridade == 0:
+        if inst.bks_custo and inst.modo == "completo" and par.custo_fixo_veiculo == 0 and par.peso_prioridade == 0:
             gap = (res.distancia / inst.bks_custo - 1.0) * 100.0
         alta = [t for r in rotas for u, t in zip(r["nos"], r["inicios"]) if inst.nos[u].prioridade == 1]
         return {
