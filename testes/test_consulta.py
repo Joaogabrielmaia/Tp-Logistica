@@ -217,6 +217,24 @@ class TestErrosExplicados(unittest.TestCase):
         with self.assertRaises(ErroRequisicao):
             s.enviar({"nome": "x", "extensao": ".png", "conteudo": "abc"})
 
+    def test_pular_inatendiveis(self):
+        from logistica.solver import resolver_atendiveis
+        from logistica.verificador import verificar
+        inst = ler_instancia(os.path.join(DADOS, "solomon/R101.vrp"), modo="viario")
+        par = inst.parametros_padrao()
+        res, fora = resolver_atendiveis(inst, par, iteracoes=300, semente=1)
+        self.assertTrue(fora)
+        atendidos = sorted(u for r in res.rotas for u in r)
+        self.assertEqual(atendidos, [u for u in range(1, inst.n + 1) if u not in fora])
+        self.assertTrue(verificar(inst, par, res.rotas, res.custo, exigir_todos=False).viavel)
+        self.assertFalse(verificar(inst, par, res.rotas, res.custo, exigir_todos=True).viavel)
+        codigo, saida, erro = rodar_cli("resolver", os.path.join(DADOS, "solomon/R101.vrp"), "--modo", "viario", "--iteracoes", "300", "--pular-inatendiveis")
+        self.assertEqual(codigo, 0)
+        self.assertIn("deixados de fora", saida)
+        codigo, _, erro = rodar_cli("resolver", os.path.join(DADOS, "solomon/R101.vrp"), "--modo", "viario", "--iteracoes", "300")
+        self.assertEqual(codigo, 1)
+        self.assertIn("--pular-inatendiveis", erro)
+
     def test_servico_caminho(self):
         s = Servico(DADOS, os.path.join(RAIZ, "resultados"))
         r = s.caminho({"arquivo": "solomon/R101.vrp", "modo": "viario", "origem": "0", "destino": "15"})
