@@ -6,7 +6,7 @@ NO CANVAS (item entregue pelo Canvas, fora do repositório).
 | # | Requisito do enunciado | Onde é atendido | Validação e evidência | Estado |
 |---|---|---|---|---|
 | 1 | Tema 10: rotas com restrições de tempo, distância, prioridade e capacidade | `avaliacao.py`, `construtivo.py`, `otimizador.py`, `modelo.py` | `testes/test_solver.py`, `testes/test_avaliacao.py`, verificador independente | APROVADO |
-| 2 | Estrutura de grafo e algoritmos compatíveis | `grafo.py`, `caminhos.py`, `rede_viaria.py` | `testes/test_grafo.py`, `testes/test_caminhos.py` (Dijkstra contra Floyd-Warshall, Kruskal contra força bruta) | APROVADO |
+| 2 | Estrutura de grafo e algoritmos compatíveis | `grafo.py`, `caminhos.py`, `rede_viaria.py`, `consulta.py` (BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices) | `testes/test_grafo.py`, `testes/test_caminhos.py`, `testes/test_consulta.py` (Dijkstra contra Floyd-Warshall, Kruskal contra força bruta, os seis algoritmos contra Floyd-Warshall) | APROVADO |
 | 3 | Proibido NetworkX e bibliotecas de grafos | somente biblioteca padrão; sem importações de terceiros em `logistica/` | `grep -R "networkx" .` sem resultados; `requirements-relatorio.txt` só para figuras do relatório | APROVADO |
 | 4 | Demonstrar a correção da solução | `verificador.py`, `exato.py` | 65 BKS reproduzidas exatamente; 50 instâncias pequenas comparadas com o ótimo; `resultados/exato.csv` | APROVADO |
 | 5 | Analisar a complexidade | relatório, seção 4 | expoentes medidos em `resultados/escala.csv` | APROVADO COM RESSALVAS (ver limitações) |
@@ -17,7 +17,7 @@ NO CANVAS (item entregue pelo Canvas, fora do repositório).
 | 10 | Responsabilidades de cada membro no relatório | seção 10 do relatório | tabela por integrante (Tabela de responsabilidades); branches `joao`, `pedro` e `thomas` | APROVADO |
 | 11 | Etapa 1: descrição, justificativa da modelagem, plano, UML | `docs/etapa1/etapa1.pdf` | 5 diagramas UML | APROVADO |
 | 12 | Etapa 2: protótipo funcional com código versionado em Git | repositório | branch de cada integrante com seus commits, integradas na `main` com merge commit | APROVADO |
-| 13 | Interface gráfica com os resultados | `logistica/web/` | telas no relatório; `testes/test_servidor.py` | APROVADO |
+| 13 | Interface gráfica com os resultados | `logistica/web/` (mapa, cronograma, carga, convergência, caminhos e experimentos; erros com motivo e o que fazer) | telas no relatório; `testes/test_servidor.py`, `testes/test_consulta.py` | APROVADO |
 | 14 | Bases de dados para execução e testes | `dados/` (Solomon, CVRP-X e `dados/kaggle/`) | 65 instâncias de referência, 300 Gehring-Homberger e 1000 entregas, os dois últimos do Kaggle; leitores em `logistica/leitor.py`, testes em `testes/test_kaggle.py`, resultados em `resultados/kaggle_*.csv` | APROVADO |
 | 15 | Entrega: .zip com código, .tex e PDF; cada membro entrega | `scripts/empacotar.sh` gera o zip com código, `.tex` e PDFs | um zip por integrante, enviado até 22/11, 23:59 | NO CANVAS |
 | 16 | Vídeo de 12 a 18 min com todos os membros | vídeo com a demonstração das features de cada integrante | enviado junto com o zip | NO CANVAS |
