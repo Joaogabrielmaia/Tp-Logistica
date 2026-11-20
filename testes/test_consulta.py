@@ -146,6 +146,15 @@ class TestGrafoDigitado(unittest.TestCase):
             comparar_caminhos(grafo_de_texto("A B 1"), "A", "Z")
         self.assertIn("A, B", ctx.exception.motivo)
 
+    def test_mao_unica_mantem_conexidade(self):
+        inst = ler_instancia(os.path.join(DADOS, "solomon/R101.vrp"), modo="viario", mao_unica=0.5)
+        r = resumir_grafo(grafo_da_instancia(inst))
+        self.assertGreater(r["arcos_mao_unica"], 0)
+        self.assertTrue(r["fortemente_conexo"])
+        codigo, _, erro = rodar_cli("grafo", os.path.join(DADOS, "solomon/R101.vrp"), "--mao-unica", "0.3")
+        self.assertEqual(codigo, 1)
+        self.assertIn("só vale com --modo viario", erro)
+
     def test_resumo_da_instancia(self):
         r = resumir_grafo(grafo_da_instancia(ler_instancia(os.path.join(DADOS, "solomon/R101.vrp"), modo="viario")))
         self.assertEqual(r["vertices"], 101)
@@ -179,7 +188,7 @@ class TestErrosExplicados(unittest.TestCase):
     def test_cli_caminho_com_grafo_proprio(self):
         codigo, saida, _ = rodar_cli("caminho", "--arestas", "A B 4; A C 1; C B 1", "A", "B")
         self.assertEqual(codigo, 0)
-        self.assertIn("mesmo menor custo, 2", saida)
+        self.assertIn("mesmo menor custo, 2.", saida)
 
     def test_leitor_formato_vazio_e_binario(self):
         with tempfile.TemporaryDirectory() as d:
