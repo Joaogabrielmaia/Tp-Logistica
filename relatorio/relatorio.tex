@@ -135,13 +135,14 @@ Seja $n$ o número de clientes, $m$ o de arcos, $R$ o de rotas e $L$ o tamanho d
 
 O código e o histórico de desenvolvimento estão em \url{https://github.com/Joaogabrielmaia/Tp-Logistica}. O sistema tem cerca de 4\,100 linhas (3\,100 em Python e 950 em HTML, CSS e JavaScript), sem dependências externas e com comentários curtos apenas nos pontos não óbvios dos algoritmos. A Figura~\ref{fig:comp} mostra a separação em quatro grupos: modelagem e dados, algoritmos, interface e qualidade. A interface é uma página web servida localmente pela biblioteca padrão, e se comunica com o solver por uma API JSON que valida todas as entradas (tamanho de arquivo, limites de iterações, parâmetros inválidos, caminhos fora da pasta de dados). Pela linha de comando também é possível resolver instâncias e rodar os experimentos. Uma consulta à parte, na linha de comando e na aba Caminhos, roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices, no grafo de uma instância ou num grafo digitado, e todo erro conhecido aparece com o motivo e o que fazer, sem traceback.
 
-As Figuras~\ref{fig:telas1} e~\ref{fig:telas2} mostram as telas, obtidas com a ferramenta em execução. O mapa desenha as rotas sobre o grafo, com prioridade alta e média destacadas; o cronograma mostra, para cada veículo, janelas de tempo, esperas e atendimentos; a tela de carga mostra a ocupação de cada veículo e a ordem de carregamento (o último cliente entregue é o primeiro a entrar); a convergência mostra a evolução do custo e a contribuição de cada etapa. Toda solução exibida traz o resultado da verificação independente.
+As Figuras~\ref{fig:telas1} e~\ref{fig:telas2} mostram as telas, obtidas com a ferramenta em execução. O mapa desenha as rotas sobre o grafo, com prioridade alta e média destacadas; o cronograma mostra, para cada veículo, janelas de tempo, esperas e atendimentos; a tela de carga mostra a ocupação de cada veículo e a ordem de carregamento (o último cliente entregue é o primeiro a entrar); a convergência mostra a evolução do custo e a contribuição de cada etapa; a aba Caminhos compara os algoritmos entre dois vértices e destaca o caminho no grafo. Toda solução exibida traz o resultado da verificação independente.
 
 \begin{figure}[!ht]
 \centering
-\begin{minipage}{0.495\linewidth}\includegraphics[width=\linewidth]{figuras/tela_mapa.png}\end{minipage}
-\begin{minipage}{0.495\linewidth}\includegraphics[width=\linewidth]{figuras/tela_cronograma.png}\end{minipage}
-\caption{Mapa (à esquerda) e cronograma por veículo (à direita) para 200 entregas do Kaggle, com peso de prioridade $\lambda=0{,}01$.}
+\begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_mapa.png}\end{minipage}
+\begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_cronograma.png}\end{minipage}
+\begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_caminhos.png}\end{minipage}
+\caption{Da esquerda para a direita: mapa e cronograma por veículo para 200 entregas do Kaggle, com peso de prioridade $\lambda=0{,}01$, e a aba Caminhos, com os seis algoritmos entre dois vértices da rede viária.}
 \label{fig:telas1}
 \end{figure}
 
