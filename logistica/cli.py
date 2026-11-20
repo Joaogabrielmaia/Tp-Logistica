@@ -278,6 +278,10 @@ def principal(argv=None):
     except KeyboardInterrupt:
         sys.stderr.write("\nInterrompido pelo usuário.\n")
         return 130
+    # A saída foi para um programa que fechou antes do fim (ex.: "| head"); não é erro da ferramenta.
+    except BrokenPipeError:
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        return 0
 
 
 if __name__ == "__main__":
