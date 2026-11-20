@@ -43,6 +43,8 @@ Os arquivos `entregas.csv` (1000 entregas) e as instâncias Gehring-Homberger de
 ```
 python main.py resolver dados/solomon/RC101.vrp --iteracoes 5000 --mostrar-rotas
 python main.py resolver dados/kaggle/ecommerce/entregas_100.csv --peso-prioridade 0.01
-python main.py benchmark solomon --rapido
+python main.py benchmark solomon --rapido --saida resultados_teste
 python -m unittest discover -s testes -t .
 ```
+
+O `--rapido` roda só uma parte das instâncias; com `--saida resultados_teste` ele grava numa pasta à parte e não mexe nos CSV oficiais de `resultados/`, que são os usados no relatório.
