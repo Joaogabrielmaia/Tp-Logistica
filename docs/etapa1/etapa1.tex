@@ -10,14 +10,10 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \sloppy
 
-\newcommand{\PA}{João Gabriel}
-\newcommand{\PB}{Davi Vinicius}
-\newcommand{\PC}{Thomas Ramos}
-\newcommand{\PD}{Pedro Eduardo}
 
 \title{Etapa 1 -- Modelagem e Planejamento\\ Roteamento e Carga de Veículos em Centros Logísticos}
 
-\author{João Gabriel Maia da Costa\inst{1}, Davi Vinicius Barbosa de Oliveira\inst{1},\\ Thomas Ramos Oliveira\inst{1}, Pedro Eduardo Pimenta\inst{1}}
+\author{João Gabriel Maia da Costa\inst{1}, Thomas Ramos Oliveira\inst{1},\\ Pedro Eduardo Pimenta\inst{1}}
 
 \address{Engenharia de Software -- Pontifícia Universidade Católica de Minas Gerais (PUC Minas)\\ Teoria dos Grafos -- Trabalho Prático, Tema 10}
 
@@ -184,26 +180,6 @@ Até 20/11 & Etapa 3: experimentos, relatório em LaTeX (SBC), vídeo e slides \
 \bottomrule
 \end{tabular}
 \caption{Cronograma.}
-\end{table}
-
-\subsection{Divisão de responsabilidades}
-
-Todos revisam e entendem todo o código, mas cada integrante desenvolve sua parte em uma branch própria, e as partes são integradas à branch principal por pull requests revisados pelos demais. Essa divisão deixa claro quem responde por qual parte e permite que cada integrante explique suas funcionalidades na apresentação, sem perder a visão do conjunto.
-
-\begin{table}[!ht]
-\centering
-\small
-\begin{tabular}{L{2.2cm}L{8.4cm}}
-\toprule
-Integrante & Responsabilidades \\
-\midrule
-\PA{} & Estrutura inicial do repositório e integração das branches; modelo e grafo dirigido (union-find, Kruskal, alcançabilidade); leitura das bases (VRPLIB, texto de Solomon e CSV do Kaggle) e rede viária; serviço, servidor HTTP e lógica da interface (mapa, cronograma, carga, convergência); experimentos, figuras e tabelas; diagramas de classes; documento da Etapa 1 e relatório final \\
-\PD{} & Levantamento das bases de dados; diagramas de componentes e de sequência; avaliação de rotas com folgas de tempo; heurísticas construtivas; busca local com filtros $O(1)$; ruína e recriação e solver; verificador independente; solver exato; testes com os dados do Kaggle \\
-\PC{} & Diagrama de atividades; caminhos mínimos com Dijkstra e seus testes; linha de comando; tutorial de uso \\
-\PB{} & Diagrama de casos de uso; estrutura e estilo da interface web (HTML e CSS); roteiro da demonstração; revisão do documento da Etapa 1 e do relatório final, com apoio na compilação no Overleaf; slides da apresentação; condução e narração do vídeo \\
-\bottomrule
-\end{tabular}
-\caption{Divisão das responsabilidades.}
 \end{table}
 
 \subsection{Estratégia de testes e critérios de aceitação}
