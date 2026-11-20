@@ -189,13 +189,30 @@ def ler_entregas_csv(caminho, modo="completo", semente=0, limite=None, capacidad
     return inst
 
 
+FORMATOS = (".vrp", ".txt", ".csv")
+
+
 def ler_instancia(caminho, modo="completo", semente=0):
     ext = os.path.splitext(caminho)[1].lower()
-    if ext == ".txt":
-        return ler_solomon_txt(caminho, modo, semente)
-    if ext == ".csv":
-        return ler_entregas_csv(caminho, modo, semente)
-    return ler_vrplib(caminho, modo, semente)
+    if ext not in FORMATOS:
+        raise ErroInstancia("formato não reconhecido: '%s' (aceitos: .vrp, .txt, .csv)" % (ext or "sem extensão"))
+    if not os.path.isfile(caminho):
+        raise ErroInstancia("arquivo não encontrado: " + caminho)
+    if os.path.getsize(caminho) == 0:
+        raise ErroInstancia("arquivo vazio: " + caminho)
+    try:
+        if ext == ".txt":
+            return ler_solomon_txt(caminho, modo, semente)
+        if ext == ".csv":
+            return ler_entregas_csv(caminho, modo, semente)
+        return ler_vrplib(caminho, modo, semente)
+    except ErroInstancia:
+        raise
+    except UnicodeDecodeError:
+        raise ErroInstancia("formato não reconhecido: o arquivo não é texto")
+    # Linha fora do formato (texto onde se esperava número, coluna faltando): vira um erro explicado, sem traceback.
+    except (ValueError, IndexError, KeyError) as e:
+        raise ErroInstancia("conteúdo inválido no arquivo (%s: %s)" % (type(e).__name__, e))
 
 
 # O grafo é construído antes das janelas de tempo, que partem das distâncias reais; assim todo cliente é atendível
