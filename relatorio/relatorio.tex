@@ -41,7 +41,7 @@ Este trabalho trata do Tema 10 da disciplina: \emph{roteamento e carga de veícu
   \item uma validação em camadas: testes, verificador independente, solver exato e melhores soluções conhecidas;
   \item uma avaliação experimental reproduzível, com sementes e iterações fixas.
 \end{itemize}
-Estrutura, algoritmos e verificação são implementados pelo grupo em Python, só com a biblioteca padrão. Nenhuma biblioteca de grafos é usada, nem mesmo para comparação de desempenho. A Seção~2 define o problema, a Seção~3 apresenta a modelagem, a Seção~4 os algoritmos e a complexidade, a Seção~5 a implementação, a Seção~6 a validação, a Seção~7 os resultados e as Seções~8 e 9 as limitações e conclusões.
+Estrutura, algoritmos e verificação são implementados pelo grupo em Python, só com a biblioteca padrão. A ferramenta não usa nenhuma biblioteca de grafos; a NetworkX aparece só numa pasta à parte, a título de comparação de desempenho, como o enunciado permite. A Seção~2 define o problema, a Seção~3 apresenta a modelagem, a Seção~4 os algoritmos e a complexidade, a Seção~5 a implementação, a Seção~6 a validação, a Seção~7 os resultados e as Seções~8 e 9 as limitações e conclusões.
 
 \section{Definição do problema e dados}
 
@@ -165,6 +165,7 @@ A confiança no resultado vem de camadas independentes:
   \item \textbf{Solver exato.} O próprio solver exato é conferido por enumeração completa de partições. Depois, a heurística é comparada com ele em \exN{} instâncias de 8 clientes.
   \item \textbf{Casos de falha.} Arquivo ausente ou inválido, capacidade menor que a demanda, rede desconexa, cliente impossível, frota insuficiente, requisições malformadas e tentativa de acessar arquivos fora da pasta de dados.
   \item \textbf{Reprodutibilidade.} A mesma semente e as mesmas iterações geram a mesma solução.
+  \item \textbf{Comparação com a NetworkX, só como referência.} Na pasta \texttt{comparacao\_networkx/}, isolada da ferramenta, os mesmos arcos das redes viárias de 101 a 1001 vértices foram copiados para a NetworkX~3.7. Dijkstra, A*, Bellman-Ford, Floyd-Warshall, Kruskal e a checagem de conexidade deram respostas iguais nos 34 casos, inclusive em 200 grafos com peso negativo; a matriz de distâncias saiu 2,3 vezes mais rápida que a da biblioteca com 1001 vértices. Um teste automático falha se algum arquivo da ferramenta importar uma biblioteca de grafos e roda a ferramenta com a NetworkX bloqueada.
 \end{enumerate}
 O verificador detecta cliente repetido ou faltando, capacidade, janela, distância, frota e custo informado errado, cada um com teste próprio. Os testes automatizados cobrem estes itens e rodam com \texttt{python -m unittest}. Durante o trabalho a validação encontrou um defeito real, já corrigido e coberto por teste de regressão: o gerador sintético criava clientes impossíveis de atender no modo viário. A varredura final achou outro: marcar prioridades sintéticas sobrescrevia a prioridade que o arquivo do Kaggle já traz. Ela também mostrou que as economias, sozinhas, podem usar mais veículos que a frota (31 contra 25 em R101), o que o solver final trata.
 
