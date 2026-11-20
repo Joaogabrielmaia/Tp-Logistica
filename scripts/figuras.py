@@ -6,6 +6,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter, ScalarFormatter
 import numpy as np
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +19,19 @@ OUT = os.path.join(RAIZ, "relatorio", "figuras")
 AZUL, LARANJA, VERDE, CINZA, VERMELHO = "#1f5fd1", "#d9822b", "#2e9d6a", "#8a93a6", "#c0392b"
 
 plt.rcParams.update({"font.size": 8.5, "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True, "grid.alpha": 0.25, "figure.dpi": 150, "savefig.bbox": "tight"})
+
+def _com_virgula(valor, _pos):
+    return ("%g" % valor).replace(".", ",")
+
+
+def salvar(fig, nome):
+    # eixos lineares com vírgula decimal; eixos log e rótulos fixos (famílias, instâncias) ficam como estão
+    for ax in fig.axes:
+        for eixo, escala in ((ax.xaxis, ax.get_xscale()), (ax.yaxis, ax.get_yscale())):
+            if escala == "linear" and isinstance(eixo.get_major_formatter(), ScalarFormatter):
+                eixo.set_major_formatter(FuncFormatter(_com_virgula))
+    fig.savefig(os.path.join(OUT, nome))
+
 
 
 def ler(nome):
@@ -45,7 +59,7 @@ def gap_solomon():
     ax.set_xticklabels(rotulos)
     ax.set_ylabel("diferença para a BKS (%)")
     ax.set_xlabel("família de instâncias Solomon")
-    fig.savefig(os.path.join(OUT, "fig_gap_solomon.pdf"))
+    salvar(fig, "fig_gap_solomon.pdf")
     plt.close(fig)
 
 
@@ -64,7 +78,7 @@ def ablacao():
     ax.set_xticklabels([l["instancia"] for l in linhas], rotation=30, ha="right")
     ax.set_ylabel("diferença para a BKS (%, escala log)")
     ax.legend(ncol=4, fontsize=7, loc="upper center", bbox_to_anchor=(0.5, 1.18), frameon=False)
-    fig.savefig(os.path.join(OUT, "fig_ablacao.pdf"))
+    salvar(fig, "fig_ablacao.pdf")
     plt.close(fig)
 
 
@@ -76,13 +90,13 @@ def escala():
     for nome, chave, cor in series:
         t = np.array([float(l[chave]) for l in linhas])
         inc = np.polyfit(np.log(n), np.log(np.maximum(t, 1e-4)), 1)[0]
-        ax.plot(n, t, "o-", color=cor, label="%s (expoente ≈ %.1f)" % (nome, inc), ms=3.5)
+        ax.plot(n, t, "o-", color=cor, label=("%s (expoente ≈ %.1f)" % (nome, inc)).replace(".", ","), ms=3.5)
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel("número de clientes")
     ax.set_ylabel("tempo (s)")
     ax.legend(fontsize=7, frameon=False)
-    fig.savefig(os.path.join(OUT, "fig_escala.pdf"))
+    salvar(fig, "fig_escala.pdf")
     plt.close(fig)
 
 
@@ -108,7 +122,7 @@ def prioridade():
     h2, l2 = eixos[0].figure.axes[1].get_legend_handles_labels()
     fig.legend(h1 + h2, l1 + l2, fontsize=7, frameon=False, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.12))
     fig.tight_layout()
-    fig.savefig(os.path.join(OUT, "fig_prioridade.pdf"))
+    salvar(fig, "fig_prioridade.pdf")
     plt.close(fig)
 
 
@@ -130,7 +144,7 @@ def modos_do_grafo():
         ax.set_title("%s: %d arcos" % (titulo, inst.grafo.m), fontsize=8)
         ax.set_aspect("equal")
         ax.axis("off")
-    fig.savefig(os.path.join(OUT, "fig_modos_grafo.pdf"))
+    salvar(fig, "fig_modos_grafo.pdf")
     plt.close(fig)
 
 
