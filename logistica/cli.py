@@ -74,7 +74,7 @@ def principal(argv=None):
     pb = sub.add_parser("benchmark", help="executa os experimentos e grava os CSV em resultados/")
     pb.add_argument("conjunto", nargs="?", default="todos", choices=["todos", "solomon", "cvrp_x", "ablacao", "escala", "grafo_viario", "prioridade", "exato", "kaggle_gh", "kaggle_entregas"])
     pb.add_argument("--saida", default=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "resultados"))
-    pb.add_argument("--iteracoes", type=int, default=20000)
+    pb.add_argument("--iteracoes", type=int, default=10000)
     pb.add_argument("--rapido", action="store_true")
     pb.set_defaults(funcao=_benchmark)
     args = ap.parse_args(argv)
