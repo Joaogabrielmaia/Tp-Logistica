@@ -8,3 +8,7 @@ __pycache__/
 *.blg
 .vscode/
 .idea/
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+resultados_teste/
