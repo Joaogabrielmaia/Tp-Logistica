@@ -1,6 +1,6 @@
 # testes/ — testes automatizados
 
-São 86 testes com `unittest`, da biblioteca padrão. Para rodar todos, a partir da raiz do projeto:
+São 87 testes com `unittest`, da biblioteca padrão. Para rodar todos, a partir da raiz do projeto:
 
 ```
 python -m unittest discover -s testes -t .

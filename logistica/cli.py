@@ -21,6 +21,7 @@ TRADUCOES = [
     (r"the following arguments are required: (.*)", r"faltou informar: \1"),
     (r"unrecognized arguments: (.*)", r"argumentos não reconhecidos: \1"),
     (r"expected one argument", r"essa opção precisa de um valor"),
+    (r"^argument comando:", r"comando:"),
     (r"^argument (\S+):", r"opção \1:"),
 ]
 
