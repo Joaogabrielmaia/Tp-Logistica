@@ -6,6 +6,17 @@ padrão, sem bibliotecas de grafos (NetworkX e similares não são usadas em nen
 
 Tutorial de uso: `docs/tutorial.md`.
 
+## Por onde começar
+
+Cada pasta tem um README explicando o que tem dentro:
+
+- `logistica/README.md`: o código, arquivo por arquivo, na ordem do fluxo (dado, grafo, solver, verificação, tela);
+- `testes/README.md`: o que cada teste confere e como rodar;
+- `dados/README.md`: as bases usadas, de onde vieram e as suposições sobre o CSV do Kaggle;
+- `resultados/README.md`: o que mede cada experimento;
+- `docs/README.md`: Etapa 1, diagramas, tutorial e matriz de rastreabilidade;
+- `relatorio/README.md` e `scripts/README.md`: como o relatório e suas tabelas são gerados.
+
 ## Como executar
 
 Requer Python 3.10 ou superior. Não há dependências para rodar o sistema.
