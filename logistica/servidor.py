@@ -76,14 +76,17 @@ def criar_servidor(porta=8000, host="127.0.0.1", dados=None, resultados=None):
                     self._responder(200, {"arquivo": servico.gerar(corpo)})
                 elif url.path == "/api/enviar":
                     self._responder(200, {"arquivo": servico.enviar(corpo)})
+                elif url.path == "/api/caminho":
+                    self._responder(200, servico.caminho(corpo))
                 else:
                     self._responder(404, {"erro": "rota desconhecida"})
             except ErroRequisicao as e:
-                self._responder(400, {"erro": str(e)})
+                self._responder(400, {"erro": str(e), "motivo": e.motivo, "dica": e.dica})
             except (ValueError, TypeError) as e:
-                self._responder(400, {"erro": "parâmetros inválidos: " + str(e)})
+                self._responder(400, {"erro": "parâmetros inválidos: " + str(e), "motivo": "algum campo veio vazio ou com texto no lugar de número.", "dica": "confira os campos numéricos da tela."})
+            # Qualquer outra falha vira resposta 500 com o tipo do erro, para a página não ficar travada esperando.
             except Exception as e:
-                self._responder(500, {"erro": "falha interna: " + type(e).__name__})
+                self._responder(500, {"erro": "falha interna: " + type(e).__name__, "motivo": str(e)[:200], "dica": "recarregue a página; se repetir, rode o mesmo caso pela linha de comando para ver o detalhe."})
 
     servidor = ThreadingHTTPServer((host, porta), Manipulador)
     servidor.servico = servico
