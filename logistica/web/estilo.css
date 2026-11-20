@@ -1,0 +1,132 @@
+/* Paleta: as cores principais viram variáveis porque o app.js lê --texto, --borda e --marca para desenhar o mapa */
+:root{
+  --fundo:#eef1f5;--superficie:#ffffff;--superficie-2:#f7f8fa;--borda:#dde2ea;--texto:#14213d;--suave:#5b667a;
+  --marca:#2b5c8a;--marca-escura:#1f4569;--destaque:#d9772a;--destaque-escuro:#b9611b;--destaque-texto:#ffffff;
+  --topo:#14213d;--topo-texto:#f7f6f2;--topo-suave:#a9b8cc;
+  --ok:#1d7f4e;--erro:#c0392b;--alerta:#b7791f;
+  --raio:14px;--raio-p:9px;
+  --sombra:0 1px 2px rgba(20,33,61,.06),0 6px 20px rgba(20,33,61,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-tema="claro"]){
+    --fundo:#0f1522;--superficie:#172033;--superficie-2:#1c2740;--borda:#2a3650;--texto:#e8ecf3;--suave:#9aa6bb;
+    --marca:#79a7d6;--marca-escura:#9cc0e6;--destaque:#f0a05c;--destaque-escuro:#f5b47b;--destaque-texto:#1b1206;
+    --topo:#0b1120;--topo-texto:#eef1f6;--topo-suave:#8796ad;
+    --ok:#4cc47f;--erro:#ff7b6b;--alerta:#e6b450;--sombra:none;
+  }
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--fundo);color:var(--texto);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+
+/* Barra do topo */
+.topo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--topo);color:var(--topo-texto)}
+.marca{display:flex;align-items:center;gap:14px}
+.marca h1{font-size:18px;font-weight:650;letter-spacing:-.01em}
+.marca p{color:var(--topo-suave);font-size:12.5px;margin-top:1px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--destaque);position:relative;flex:none}
+.logo::before,.logo::after{content:"";position:absolute;border-radius:50%;background:var(--topo)}
+.logo::before{width:8px;height:8px;left:7px;bottom:7px}
+.logo::after{width:8px;height:8px;right:7px;top:7px;box-shadow:-10px 10px 0 -2.5px var(--topo)}
+.estado{font-size:12px;color:var(--topo-suave);padding:6px 12px 6px 26px;border:1px solid rgba(255,255,255,.18);border-radius:999px;white-space:nowrap;position:relative}
+.estado::before{content:"";position:absolute;left:11px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:#4cc47f}
+.estado.ocupado{color:var(--topo-texto);border-color:var(--destaque)}
+.estado.ocupado::before{background:var(--destaque);animation:pulso 1s ease-in-out infinite}
+@keyframes pulso{50%{opacity:.25}}
+
+/* Estrutura: painel de configuração à esquerda, resultados à direita */
+.layout{display:grid;grid-template-columns:330px minmax(0,1fr);gap:20px;padding:20px 24px;align-items:start}
+.painel{background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);padding:4px 18px 18px;box-shadow:var(--sombra);position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;counter-reset:passo}
+.painel section{padding:16px 0 14px;border-bottom:1px solid var(--borda)}
+.painel section:last-of-type{border-bottom:0}
+.painel h2{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:650;letter-spacing:.07em;text-transform:uppercase;color:var(--texto);margin-bottom:6px}
+.painel h2::before{counter-increment:passo;content:counter(passo);display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--marca);color:var(--superficie);font-size:11px;letter-spacing:0}
+
+/* Campos */
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:500;color:var(--suave);margin-top:8px}
+input,select{font:inherit;font-size:13.5px;color:var(--texto);background:var(--superficie-2);border:1px solid var(--borda);border-radius:var(--raio-p);padding:7px 10px;width:100%;min-width:0;transition:border-color .15s,background .15s}
+input:hover,select:hover{border-color:color-mix(in srgb,var(--marca) 40%,var(--borda))}
+input:focus,select:focus{background:var(--superficie);border-color:var(--marca)}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--marca);outline-offset:2px}
+input[type=file]{padding:6px;font-size:12.5px}
+.grade2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.check,.radio{flex-direction:row;align-items:center;gap:8px;color:var(--texto);font-size:13px;font-weight:400;cursor:pointer}
+.check input,.radio input{width:auto;accent-color:var(--marca)}
+.radio{align-items:flex-start;padding:10px 12px;border:1px solid var(--borda);border-radius:var(--raio-p);margin-top:8px;transition:border-color .15s,background .15s}
+.radio:hover{border-color:color-mix(in srgb,var(--marca) 45%,var(--borda))}
+.radio input{margin-top:3px}
+.radio span{display:flex;flex-direction:column;gap:1px}
+.radio small{color:var(--suave);font-size:12px}
+.radio:has(input:checked){border-color:var(--marca);background:color-mix(in srgb,var(--marca) 8%,transparent)}
+
+/* Blocos recolhíveis (gerar instância, enviar arquivo) */
+details{margin-top:10px;border:1px dashed var(--borda);border-radius:var(--raio-p);padding:0 12px}
+details[open]{border-style:solid;background:var(--superficie-2);padding-bottom:12px}
+summary{cursor:pointer;color:var(--marca);font-size:12.5px;font-weight:600;padding:8px 0;list-style:none;display:flex;align-items:center;gap:6px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";display:inline-grid;place-items:center;width:16px;height:16px;border-radius:4px;border:1px solid currentColor;font-size:12px;line-height:1}
+details[open] summary::before{content:"−"}
+
+/* Botões */
+button{font:inherit;border-radius:var(--raio-p);border:1px solid var(--borda);background:var(--superficie);color:var(--texto);padding:8px 12px;cursor:pointer;transition:background .15s,border-color .15s}
+button.prim{width:100%;margin-top:6px;background:var(--destaque);border-color:var(--destaque);color:var(--destaque-texto);font-weight:650;font-size:14.5px;padding:12px;box-shadow:0 2px 8px color-mix(in srgb,var(--destaque) 35%,transparent)}
+button.prim:hover{background:var(--destaque-escuro);border-color:var(--destaque-escuro)}
+button.sec{margin-top:10px;width:100%;color:var(--marca);border-color:var(--marca);font-weight:600}
+button.sec:hover{background:color-mix(in srgb,var(--marca) 8%,transparent)}
+button:disabled{opacity:.55;cursor:progress}
+
+/* Área de resultados */
+.conteudo{min-width:0}
+.aviso{padding:11px 14px;border-radius:var(--raio-p);margin-bottom:14px;border:1px solid var(--erro);border-left-width:4px;color:var(--erro);background:color-mix(in srgb,var(--erro) 7%,var(--superficie))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);padding:12px 16px;box-shadow:var(--sombra);border-top:3px solid var(--marca)}
+.kpi span{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--suave)}
+.kpi b{display:block;font-size:22px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi small{color:var(--suave);font-size:12px}
+.kpi.ok{border-top-color:var(--ok)}.kpi.ok b{color:var(--ok)}
+.kpi.ruim{border-top-color:var(--erro)}.kpi.ruim b{color:var(--erro)}
+
+/* Abas */
+.abas{display:flex;gap:4px;padding:4px;background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);margin-bottom:14px;overflow-x:auto;box-shadow:var(--sombra)}
+.abas button{border:0;background:none;border-radius:var(--raio-p);padding:8px 16px;color:var(--suave);font-weight:500;white-space:nowrap}
+.abas button:hover{color:var(--texto);background:var(--superficie-2)}
+.abas button[aria-selected="true"]{color:var(--superficie);background:var(--marca);font-weight:600}
+
+/* Mapa e tabela de rotas */
+.mapa-grade{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:14px}
+.mapa-caixa{position:relative;background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra)}
+#mapa{display:block;width:100%;height:600px}
+.dica{position:absolute;pointer-events:none;background:var(--topo);color:var(--topo-texto);padding:8px 11px;border-radius:var(--raio-p);font-size:12px;line-height:1.45;max-width:260px;z-index:3;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.legenda{position:absolute;left:12px;bottom:12px;background:color-mix(in srgb,var(--superficie) 94%,transparent);border:1px solid var(--borda);border-radius:var(--raio-p);padding:7px 11px;font-size:11.5px;display:flex;gap:12px;flex-wrap:wrap;backdrop-filter:blur(4px)}
+.legenda i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;box-sizing:border-box}
+.tabela-caixa,.svg-caixa{background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);box-shadow:var(--sombra);overflow:auto}
+.tabela-caixa{max-height:600px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--borda);font-size:12.5px;white-space:nowrap}
+th{position:sticky;top:0;background:var(--superficie-2);color:var(--suave);font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:var(--superficie-2)}
+tbody tr.sel{background:color-mix(in srgb,var(--marca) 12%,transparent);box-shadow:inset 3px 0 0 var(--marca)}
+.chip{display:inline-block;width:12px;height:12px;border-radius:4px}
+.barra{display:inline-block;vertical-align:middle;width:56px;height:7px;border-radius:4px;background:var(--borda);overflow:hidden;margin-right:6px}
+.barra i{display:block;height:100%;background:var(--marca)}
+
+/* Gráficos em SVG (cronograma, carga, convergência) e tabelas dos experimentos */
+.svg-caixa{padding:14px}
+.svg-caixa svg{display:block;width:100%;height:auto}
+#carregamento,#etapas,#desempenho{margin-top:14px}
+#desempenho h3,#etapas h3,#carregamento h3{font-size:13.5px;font-weight:650;margin:18px 0 8px;padding-left:10px;border-left:3px solid var(--destaque)}
+.rolagem{overflow:auto;background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);box-shadow:var(--sombra)}
+.vazio{color:var(--suave);padding:48px 16px;text-align:center}
+svg text{fill:var(--suave);font-size:11px}
+
+@media (max-width:1000px){
+  .topo{padding:12px 16px}
+  .layout{grid-template-columns:1fr;padding:14px 16px;gap:16px}
+  .painel{position:static;max-height:none}
+  .mapa-grade{grid-template-columns:1fr}
+  #mapa{height:440px}
+  .tabela-caixa{max-height:320px}
+}
