@@ -13,6 +13,7 @@ Cada pasta tem um README explicando o que tem dentro:
 - `logistica/README.md`: o código, arquivo por arquivo, na ordem do fluxo (dado, grafo, solver, verificação, tela);
 - `testes/README.md`: o que cada teste confere e como rodar;
 - `dados/README.md`: as bases usadas, de onde vieram e as suposições sobre o CSV do Kaggle;
+- `exemplos/README.md`: casos-limite prontos (2 vértices, arquivos inválidos) e o comando de cada um;
 - `resultados/README.md`: o que mede cada experimento;
 - `docs/README.md`: Etapa 1, diagramas, tutorial e matriz de rastreabilidade;
 - `relatorio/README.md` e `scripts/README.md`: como o relatório e suas tabelas são gerados.
@@ -75,6 +76,7 @@ prioridade (peso `λ` sobre o instante de início do atendimento, com pesos 3, 2
 logistica/      código do sistema (modelo, grafo, algoritmos, serviço, servidor, web)
 testes/         testes automatizados (unittest)
 dados/          Solomon e CVRP-X com BKS; dados/kaggle/ com Gehring-Homberger e entregas de e-commerce
+exemplos/       casos-limite para testar na hora: instância de 2 vértices, grafo digitado e arquivos inválidos
 resultados/     CSV dos experimentos (gerados por python main.py benchmark)
 docs/           documento da Etapa 1, diagramas UML e matriz de rastreabilidade
 relatorio/      relatório final em LaTeX (template SBC)

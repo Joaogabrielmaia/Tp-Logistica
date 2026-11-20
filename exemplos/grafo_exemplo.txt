@@ -1,0 +1,5 @@
+# grafo de exemplo: origem destino peso
+A B 2
+B C 3
+A C 10
+C D 1

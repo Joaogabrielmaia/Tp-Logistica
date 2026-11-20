@@ -89,7 +89,7 @@ def _resolver(args):
     except ClienteInatendivel as e:
         raise explicar_inatendiveis(inst, par, e.clientes)
     rel = verificar(inst, par, res.rotas, res.custo)
-    print("Instância: %s (%d clientes, modo %s)" % (inst.nome, inst.n, inst.modo))
+    print("Instância: %s (%d cliente%s, modo %s)" % (inst.nome, inst.n, "" if inst.n == 1 else "s", inst.modo))
     for e in res.etapas:
         print("  %-20s distância %10.2f  veículos %3d  (%.2fs)" % (e["etapa"], e["distancia"], e["veiculos"], e["tempo"]))
     print("Distância final: %.2f | veículos: %d | custo: %.2f" % (res.distancia, res.veiculos, res.custo))
