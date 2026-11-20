@@ -109,6 +109,8 @@ class TestAlgoritmosDeCaminho(unittest.TestCase):
         self.assertEqual(ctx.exception.ciclo[0], ctx.exception.ciclo[-1])
         r = comparar_caminhos(g, "A", "C")
         self.assertIn("ciclo negativo", r["conclusao"])
+        r = comparar_caminhos(grafo_de_texto("A B -1"), "A", "B")
+        self.assertIn("não dirigida", r["conclusao"])
 
     def test_dois_vertices_e_uma_aresta(self):
         r = comparar_caminhos(grafo_de_texto("A B 1"), "A", "B")
@@ -172,6 +174,7 @@ class TestErrosExplicados(unittest.TestCase):
             ("resolver", os.path.join(DADOS, "solomon/R101.vrp"), "--peso-prioridade", "-1"),
             ("caminho", os.path.join(DADOS, "solomon/R101.vrp"), "0", "999"),
             ("caminho", "--arestas", "A B x", "A", "B"),
+            ("grafo", os.path.join(DADOS, "solomon/R101.vrp"), "--arestas", "A B 1"),
         ]
         for argv in casos:
             codigo, _, erro = rodar_cli(*argv)

@@ -1,5 +1,4 @@
 import csv
-import math
 import os
 import statistics
 import time
@@ -126,7 +125,7 @@ def escala(saida, iteracoes, rapido):
         t_viario = time.time() - t0
         par = inst.parametros_padrao()
         t0 = time.time()
-        res0 = resolver(inst, par, usar_otimizador=False)
+        resolver(inst, par, usar_otimizador=False)
         t_construtivo = time.time() - t0
         t0 = time.time()
         res = resolver(inst, par, iteracoes=1000, semente=1)

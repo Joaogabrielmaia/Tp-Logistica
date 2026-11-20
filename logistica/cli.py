@@ -126,6 +126,10 @@ def _resolver(args):
 def _grafo_dos_args(args):
     from .consulta import grafo_da_instancia, grafo_de_texto
     if args.arestas is not None or args.grafo_arquivo:
+        if args.arquivo:
+            raise ErroExplicado("use uma instância ou um grafo próprio, não os dois",
+                                "o grafo vem do arquivo da instância ou de --arestas/--grafo-arquivo; com os dois não dá para saber qual usar.",
+                                "tire o arquivo da instância ou a opção --arestas.")
         if args.arestas is not None and args.grafo_arquivo:
             raise ErroExplicado("use --arestas ou --grafo-arquivo, não os dois", "são duas formas de informar o mesmo grafo próprio.", "escolha uma delas.")
         texto = args.arestas
@@ -186,7 +190,7 @@ def _grafo(args):
     print("  fortemente conexo (todos alcançam todos): %s" % ("sim" if r["fortemente_conexo"] else "não"))
     print("  arcos de mão única (sem o arco de volta): %d" % r["arcos_mao_unica"])
     print("  componentes fracamente conexas: %d" % r["componentes_fracas"])
-    print("  árvore geradora mínima (Kruskal): %d arestas, peso %.2f%s" % (r["agm_arestas"], r["agm_peso"], "" if r["agm_completa"] else " (floresta: o grafo é desconexo)"))
+    print("  árvore geradora mínima (Kruskal): %d aresta%s, peso %.2f%s" % (r["agm_arestas"], "" if r["agm_arestas"] == 1 else "s", r["agm_peso"], "" if r["agm_completa"] else " (floresta: o grafo é desconexo)"))
     if args.mostrar_agm:
         for u, v, p in r["agm"]:
             print("    %s - %s  (%g)" % (u, v, p))

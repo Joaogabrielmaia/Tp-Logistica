@@ -31,7 +31,8 @@ LIMITE_FLOYD = 300
 
 
 class Grafo:
-    def __init__(self, grafo, rotulos, coordenadas=None, origem_dados=""):
+    def __init__(self, grafo, rotulos, coordenadas=None, origem_dados="", dirigido=True):
+        self.dirigido = dirigido
         self.grafo = grafo
         self.rotulos = rotulos
         self.coordenadas = coordenadas
@@ -121,7 +122,7 @@ def grafo_de_texto(texto, dirigido=False):
             g.adicionar_arco(u, v, peso)
         else:
             g.adicionar_aresta(u, v, peso)
-    return Grafo(g, rotulos, None, "grafo digitado (%s)" % ("dirigido" if dirigido else "não dirigido"))
+    return Grafo(g, rotulos, None, "grafo digitado (%s)" % ("dirigido" if dirigido else "não dirigido"), dirigido)
 
 
 def _custo(grafo, caminho):
@@ -200,6 +201,8 @@ def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
         conclusao = "não existe caminho de %s até %s neste grafo." % (origem, destino)
     elif any(l["situacao"] == "ciclo_negativo" for l in linhas):
         conclusao = "o grafo tem ciclo negativo alcançável a partir da origem, então o menor caminho não está definido."
+        if not g.dirigido:
+            conclusao += " Numa aresta não dirigida de peso negativo, ir e voltar por ela já é um ciclo negativo; para peso negativo, marque o grafo como dirigido."
     return {"origem": g.rotulos[s], "destino": g.rotulos[t], "grafo": g.origem_dados, "linhas": linhas, "conclusao": conclusao}
 
 

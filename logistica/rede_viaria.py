@@ -1,7 +1,7 @@
 import math
 import random
 
-from .grafo import GrafoDirigido, UnionFind, kruskal
+from .grafo import GrafoDirigido, kruskal
 
 
 def distancia_euclidiana(a, b):

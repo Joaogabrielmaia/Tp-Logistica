@@ -1,7 +1,7 @@
 import copy
 import random
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 # Peso w do termo de prioridade: alta pesa 3, média 2 e baixa 1.
 PESOS_PRIORIDADE = {1: 3.0, 2: 2.0, 3: 1.0}
