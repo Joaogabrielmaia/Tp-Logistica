@@ -39,8 +39,8 @@
         <button id="b-gerar" class="sec" type="button">Gerar</button>
       </details>
       <details>
-        <summary>Enviar arquivo .vrp</summary>
-        <input id="arquivo" type="file" accept=".vrp,.txt">
+        <summary>Enviar arquivo (.vrp, .txt ou .csv)</summary>
+        <input id="arquivo" type="file" accept=".vrp,.txt,.csv">
       </details>
     </section>
 
@@ -106,6 +106,7 @@
       <button role="tab" data-aba="cronograma" aria-selected="false">Cronograma</button>
       <button role="tab" data-aba="carga" aria-selected="false">Carga</button>
       <button role="tab" data-aba="convergencia" aria-selected="false">Convergência</button>
+      <button role="tab" data-aba="caminhos" aria-selected="false">Caminhos</button>
       <button role="tab" data-aba="desempenho" aria-selected="false">Experimentos</button>
     </nav>
 
@@ -128,6 +129,27 @@
     <section id="aba-cronograma" class="aba" hidden><div id="cronograma" class="svg-caixa"></div></section>
     <section id="aba-carga" class="aba" hidden><div id="carga" class="svg-caixa"></div><div id="carregamento"></div></section>
     <section id="aba-convergencia" class="aba" hidden><div id="convergencia" class="svg-caixa"></div><div id="etapas"></div></section>
+    <section id="aba-caminhos" class="aba" hidden>
+      <div class="caminhos-grade">
+        <div class="c-form">
+          <h3>Caminho entre dois vértices</h3>
+          <p class="c-nota">Roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall no grafo da instância selecionada, no modo escolhido em Grafo, ou num grafo digitado.</p>
+          <div class="grade2">
+            <label>Origem<input id="c-origem" type="text" value="0"></label>
+            <label>Destino<input id="c-destino" type="text" value="1"></label>
+          </div>
+          <label class="check"><input id="c-proprio" type="checkbox">Usar grafo próprio</label>
+          <div id="c-texto" hidden>
+            <label>Arestas (uma por linha: origem destino peso)<textarea id="c-arestas" rows="6" spellcheck="false" placeholder="A B 4&#10;A C 1&#10;C B 1&#10;B D 1"></textarea></label>
+            <label class="check"><input id="c-dirigido" type="checkbox">Dirigido (só de origem para destino)</label>
+          </div>
+          <button id="b-caminho" class="prim" type="button">Calcular caminho</button>
+          <div id="c-info" class="c-info"></div>
+        </div>
+        <div id="c-desenho" class="svg-caixa"></div>
+      </div>
+      <div id="c-tabela"></div>
+    </section>
     <section id="aba-desempenho" class="aba" hidden><div id="desempenho"></div></section>
   </main>
 </div>

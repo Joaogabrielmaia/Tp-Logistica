@@ -33,17 +33,40 @@ function definirEstado(texto, ocupado) {
   e.classList.toggle("ocupado", !!ocupado);
 }
 
-function mostrarAviso(msg) {
+// Mostra o erro em três partes, como o servidor devolve: o que aconteceu, por quê e o que fazer.
+function mostrarAviso(erro) {
   const a = $("aviso");
-  a.hidden = !msg;
-  a.textContent = msg || "";
+  if (!erro) {
+    a.hidden = true;
+    a.replaceChildren();
+    return;
+  }
+  const msg = typeof erro === "string" ? erro : erro.message;
+  const filhos = [el("b", { texto: msg })];
+  if (erro.motivo) filhos.push(el("p", {}, [el("span", { texto: "Por quê: " }), erro.motivo]));
+  if (erro.dica) filhos.push(el("p", {}, [el("span", { texto: "O que fazer: " }), erro.dica]));
+  a.replaceChildren(...filhos);
+  a.hidden = false;
 }
 
 async function chamar(caminho, corpo) {
   const opcoes = corpo === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) };
-  const r = await fetch(caminho, opcoes);
-  const dados = await r.json();
-  if (!r.ok) throw new Error(dados.erro || "erro " + r.status);
+  let r, dados;
+  try {
+    r = await fetch(caminho, opcoes);
+    dados = await r.json();
+  } catch (e) {
+    const erro = new Error("o servidor não respondeu");
+    erro.motivo = "a página fala com o programa Python que roda no terminal; se ele foi encerrado (Ctrl+C) ou caiu, não há quem responda.";
+    erro.dica = "rode de novo python main.py no terminal e recarregue a página.";
+    throw erro;
+  }
+  if (!r.ok) {
+    const erro = new Error(dados.erro || "erro " + r.status);
+    erro.motivo = dados.motivo || "";
+    erro.dica = dados.dica || "";
+    throw erro;
+  }
   return dados;
 }
 
@@ -93,7 +116,7 @@ async function visualizarInstancia() {
     renderTudo();
     definirEstado("Instância " + estado.instancia.nome + " · " + estado.instancia.n + " clientes");
   } catch (e) {
-    mostrarAviso(e.message);
+    mostrarAviso(e);
     definirEstado("Erro");
   }
 }
@@ -111,7 +134,7 @@ async function resolver() {
     renderTudo();
     definirEstado("Concluído em " + fmt(r.resultado.tempo, 2) + " s");
   } catch (e) {
-    mostrarAviso(e.message);
+    mostrarAviso(e);
     definirEstado("Erro");
   } finally {
     botao.disabled = false;
@@ -459,6 +482,7 @@ function trocarAba(nome) {
   document.querySelectorAll(".aba").forEach((s) => (s.hidden = s.id !== "aba-" + nome));
   if (nome === "mapa") renderMapa();
   if (nome === "desempenho") renderDesempenho();
+  if (nome === "caminhos") renderCaminho();
 }
 
 async function gerar() {
@@ -468,7 +492,7 @@ async function gerar() {
     await carregarLista(r.arquivo);
     await visualizarInstancia();
   } catch (e) {
-    mostrarAviso(e.message);
+    mostrarAviso(e);
   }
 }
 
@@ -478,14 +502,106 @@ function enviar(ev) {
   const leitor = new FileReader();
   leitor.onload = async () => {
     try {
-      const r = await chamar("/api/enviar", { nome: arq.name.replace(/\.[^.]+$/, ""), conteudo: leitor.result });
+      const ext = (arq.name.match(/\.[^.]+$/) || [".vrp"])[0].toLowerCase();
+      const r = await chamar("/api/enviar", { nome: arq.name.replace(/\.[^.]+$/, ""), extensao: ext, conteudo: leitor.result });
       await carregarLista(r.arquivo);
       await visualizarInstancia();
     } catch (e) {
-      mostrarAviso(e.message);
+      mostrarAviso(e);
     }
   };
   leitor.readAsText(arq);
+}
+
+// Aba Caminhos: roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices, no grafo da
+// instância selecionada (no modo escolhido no painel) ou num grafo digitado como lista de arestas.
+const consulta = { resultado: null, linha: null };
+
+async function calcularCaminho() {
+  mostrarAviso("");
+  const proprio = $("c-proprio").checked;
+  const corpo = Object.assign(configuracao(), { origem: $("c-origem").value.trim(), destino: $("c-destino").value.trim(), proprio, arestas: $("c-arestas").value, dirigido: $("c-dirigido").checked });
+  definirEstado("Calculando caminhos…", true);
+  try {
+    consulta.resultado = await chamar("/api/caminho", corpo);
+    const ok = consulta.resultado.linhas.filter((l) => l.indices);
+    consulta.linha = (ok.find((l) => l.algoritmo === "dijkstra") || ok.find((l) => l.algoritmo === "bellman_ford") || ok[0] || {}).algoritmo || null;
+    definirEstado("Caminhos calculados");
+  } catch (e) {
+    consulta.resultado = null;
+    definirEstado("Erro");
+    mostrarAviso(e);
+  }
+  renderCaminho();
+}
+
+function renderCaminho() {
+  const r = consulta.resultado;
+  const info = $("c-info"), tabela = $("c-tabela"), desenho = $("c-desenho");
+  if (!r) {
+    info.replaceChildren();
+    tabela.replaceChildren();
+    vazio(desenho, "Informe origem e destino e clique em Calcular caminho.");
+    return;
+  }
+  const g = r.resumo;
+  info.replaceChildren(
+    el("p", { texto: r.grafo }),
+    el("p", { texto: g.vertices + " vértices · " + g.arcos + " arcos · " + (g.fortemente_conexo ? "fortemente conexo" : "não é fortemente conexo") + " · " + g.componentes_fracas + " componente(s) · árvore geradora mínima " + fmt(g.agm_peso, 2) + (g.tem_peso_negativo ? " · tem peso negativo" : "") })
+  );
+  const corpo = el("tbody");
+  for (const l of r.linhas) {
+    const caminho = l.caminho ? l.caminho.join(" → ") : "—";
+    const tr = el("tr", { class: l.algoritmo === consulta.linha ? "sel" : "" }, [
+      el("td", {}, [el("b", { texto: l.nome }), el("small", { texto: l.garante })]),
+      el("td", { texto: l.custo === null ? "—" : fmt(l.custo, 2) }),
+      el("td", { texto: l.arcos === null ? "—" : String(l.arcos) }),
+      el("td", { texto: l.tempo_ms === null ? "—" : fmt(l.tempo_ms, 2) }),
+      el("td", { class: "c-caminho" }, [caminho.length > 140 ? caminho.slice(0, 137) + "…" : caminho, l.observacao ? el("small", { texto: l.observacao }) : ""]),
+    ]);
+    if (l.indices) tr.addEventListener("click", () => { consulta.linha = l.algoritmo; renderCaminho(); });
+    corpo.append(tr);
+  }
+  tabela.replaceChildren(
+    el("div", { class: "rolagem" }, [el("table", { class: "t-caminhos" }, [el("thead", {}, [el("tr", {}, ["Algoritmo", "Custo", "Arcos", "Tempo (ms)", "Caminho"].map((t) => el("th", { texto: t })))]), corpo])]),
+    el("p", { class: "c-conclusao", texto: r.conclusao ? "Conclusão: " + r.conclusao : "" })
+  );
+  desenharCaminho(desenho, r);
+}
+
+function desenharCaminho(alvo, r) {
+  const W = 760, H = 460, pad = 34;
+  const xs = r.nos.map((n) => n.x), ys = r.nos.map((n) => n.y);
+  const minx = Math.min(...xs), maxx = Math.max(...xs), miny = Math.min(...ys), maxy = Math.max(...ys);
+  const esc = Math.min((W - 2 * pad) / Math.max(1e-9, maxx - minx || 1), (H - 2 * pad) / Math.max(1e-9, maxy - miny || 1));
+  const ox = (W - esc * (maxx - minx)) / 2, oy = (H - esc * (maxy - miny)) / 2;
+  const px = (i) => ox + (r.nos[i].x - minx) * esc, py = (i) => H - (oy + (r.nos[i].y - miny) * esc);
+  const raiz = svg("svg", { viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Grafo com o caminho destacado" });
+  const poucos = r.nos.length <= 30;
+  if (r.arestas) {
+    const vistos = new Set();
+    for (const [u, v, p] of r.arestas) {
+      const chave = Math.min(u, v) + "-" + Math.max(u, v);
+      raiz.append(svg("line", { x1: px(u), y1: py(u), x2: px(v), y2: py(v), stroke: "var(--borda)", "stroke-width": poucos ? 1.6 : 1 }));
+      if (poucos && !vistos.has(chave)) {
+        vistos.add(chave);
+        raiz.append(svgTexto((px(u) + px(v)) / 2 + 4, (py(u) + py(v)) / 2 - 4, fmt(p, Number.isInteger(p) ? 0 : 1), { style: "font-size:13px" }));
+      }
+    }
+  }
+  const linha = r.linhas.find((l) => l.algoritmo === consulta.linha);
+  if (linha && linha.indices && linha.indices.length > 1) {
+    const pts = linha.indices.map((i) => px(i) + "," + py(i)).join(" ");
+    raiz.append(svg("polyline", { points: pts, fill: "none", stroke: "var(--destaque)", "stroke-width": 4, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+  }
+  const noCaminho = new Set(linha && linha.indices ? linha.indices : []);
+  r.nos.forEach((n, i) => {
+    const pontaO = n.rotulo === String(r.origem), pontaD = n.rotulo === String(r.destino);
+    const raio = pontaO || pontaD ? 8 : poucos ? 6 : noCaminho.has(i) ? 4 : 2.5;
+    raiz.append(svg("circle", { cx: px(i), cy: py(i), r: raio, fill: pontaO || pontaD ? "var(--destaque)" : noCaminho.has(i) ? "var(--marca)" : "var(--suave)" }));
+    if (poucos || pontaO || pontaD) raiz.append(svgTexto(px(i) + 9, py(i) - 9, n.rotulo, { style: "font-size:15px;font-weight:650;fill:var(--texto)" }));
+  });
+  alvo.replaceChildren(raiz, el("p", { class: "c-legenda", texto: linha ? "Destacado: " + linha.nome + " (clique em outra linha da tabela para trocar)." : "Nenhum algoritmo encontrou caminho." }));
 }
 
 async function iniciar() {
@@ -493,6 +609,8 @@ async function iniciar() {
   $("b-resolver").addEventListener("click", resolver);
   $("b-gerar").addEventListener("click", gerar);
   $("arquivo").addEventListener("change", enviar);
+  $("b-caminho").addEventListener("click", calcularCaminho);
+  $("c-proprio").addEventListener("change", () => ($("c-texto").hidden = !$("c-proprio").checked));
   $("instancia").addEventListener("change", visualizarInstancia);
   document.querySelectorAll("input[name=modo]").forEach((r) => r.addEventListener("change", visualizarInstancia));
   $("prioridades").addEventListener("change", visualizarInstancia);
@@ -503,7 +621,7 @@ async function iniciar() {
     await carregarLista();
     await visualizarInstancia();
   } catch (e) {
-    mostrarAviso(e.message);
+    mostrarAviso(e);
   }
 }
 
