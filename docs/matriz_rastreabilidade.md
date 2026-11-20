@@ -7,7 +7,7 @@ NO CANVAS (item entregue pelo Canvas, fora do repositório).
 |---|---|---|---|---|
 | 1 | Tema 10: rotas com restrições de tempo, distância, prioridade e capacidade | `avaliacao.py`, `construtivo.py`, `otimizador.py`, `modelo.py` | `testes/test_solver.py`, `testes/test_avaliacao.py`, verificador independente | APROVADO |
 | 2 | Estrutura de grafo e algoritmos compatíveis | `grafo.py`, `caminhos.py`, `rede_viaria.py`, `consulta.py` (BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices) | `testes/test_grafo.py`, `testes/test_caminhos.py`, `testes/test_consulta.py` (Dijkstra contra Floyd-Warshall, Kruskal contra força bruta, os seis algoritmos contra Floyd-Warshall) | APROVADO |
-| 3 | Proibido NetworkX e bibliotecas de grafos | somente biblioteca padrão; sem importações de terceiros em `logistica/` | `grep -R "networkx" .` sem resultados; `requirements-relatorio.txt` só para figuras do relatório | APROVADO |
+| 3 | Proibido NetworkX e bibliotecas de grafos (salvo para comparação de desempenho) | somente biblioteca padrão em `logistica/`; a NetworkX aparece só em `comparacao_networkx/`, isolada, a título de comparação | `testes/test_sem_biblioteca_de_grafos.py` falha se a ferramenta importar biblioteca de grafos e roda a ferramenta com a NetworkX bloqueada; `requirements-relatorio.txt` só para figuras do relatório | APROVADO |
 | 4 | Demonstrar a correção da solução | `verificador.py`, `exato.py` | 65 BKS reproduzidas exatamente; 50 instâncias pequenas comparadas com o ótimo; `resultados/exato.csv` | APROVADO |
 | 5 | Analisar a complexidade | relatório, seção 4 | expoentes medidos em `resultados/escala.csv` | APROVADO COM RESSALVAS (ver limitações) |
 | 6 | Discutir limitações | relatório, seção 8 | texto do relatório | APROVADO |

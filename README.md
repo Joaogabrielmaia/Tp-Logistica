@@ -2,7 +2,8 @@
 
 Trabalho Prático de Teoria dos Grafos (PUC Minas), Tema 10: planejamento de rotas logísticas com restrições de
 **tempo, distância, prioridade e capacidade de carga** dos veículos. Implementação em Python 3, somente biblioteca
-padrão, sem bibliotecas de grafos (NetworkX e similares não são usadas em nenhum ponto).
+padrão, sem bibliotecas de grafos: a ferramenta não usa NetworkX nem similares, e a NetworkX aparece só em
+`comparacao_networkx/`, isolada, a título de comparação de desempenho (o enunciado permite).
 
 Tutorial de uso: `docs/tutorial.md`.
 
@@ -14,6 +15,7 @@ Cada pasta tem um README explicando o que tem dentro:
 - `testes/README.md`: o que cada teste confere e como rodar;
 - `dados/README.md`: as bases usadas, de onde vieram e as suposições sobre o CSV do Kaggle;
 - `exemplos/README.md`: casos-limite prontos (2 vértices, arquivos inválidos) e o comando de cada um;
+- `comparacao_networkx/README.md`: comparação com a NetworkX, só como referência de desempenho e de resposta;
 - `resultados/README.md`: o que mede cada experimento;
 - `docs/README.md`: Etapa 1, diagramas, tutorial e matriz de rastreabilidade;
 - `relatorio/README.md` e `scripts/README.md`: como o relatório e suas tabelas são gerados.
@@ -78,6 +80,7 @@ logistica/      código do sistema (modelo, grafo, algoritmos, serviço, servido
 testes/         testes automatizados (unittest)
 dados/          Solomon e CVRP-X com BKS; dados/kaggle/ com Gehring-Homberger e entregas de e-commerce
 exemplos/       casos-limite para testar na hora: instância de 2 vértices, grafo digitado e arquivos inválidos
+comparacao_networkx/  só a título de comparação: os mesmos grafos na NetworkX (a ferramenta não a usa)
 resultados/     CSV dos experimentos (gerados por python main.py benchmark)
 docs/           documento da Etapa 1, diagramas UML e matriz de rastreabilidade
 relatorio/      relatório final em LaTeX (template SBC)
