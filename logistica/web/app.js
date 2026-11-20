@@ -104,11 +104,18 @@ async function carregarLista(selecionar) {
   sel.value = selecionar || (lista.find((x) => x.arquivo === "solomon/R101.vrp") || lista[0]).arquivo;
 }
 
+// Dois controles podem disparar recargas quase juntas (o campo perde o foco e o rádio muda); só a resposta do pedido
+// mais recente é usada, para uma resposta antiga não sobrescrever a nova nem mostrar um erro que já não vale.
+let pedidoInstancia = 0;
+
 async function visualizarInstancia() {
+  const meu = ++pedidoInstancia;
   mostrarAviso("");
   try {
     definirEstado("Carregando instância…", true);
-    estado.instancia = await chamar("/api/instancia", configuracao());
+    const dados = await chamar("/api/instancia", configuracao());
+    if (meu !== pedidoInstancia) return;
+    estado.instancia = dados;
     estado.resultado = null;
     estado.destaque = null;
     $("p-cap").placeholder = estado.instancia.capacidade;
@@ -117,6 +124,7 @@ async function visualizarInstancia() {
     renderTudo();
     definirEstado("Instância " + estado.instancia.nome + " · " + estado.instancia.n + " clientes");
   } catch (e) {
+    if (meu !== pedidoInstancia) return;
     mostrarAviso(e);
     definirEstado("Erro");
   }

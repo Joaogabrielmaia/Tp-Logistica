@@ -160,7 +160,7 @@ def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
             elif alg == "a_estrela":
                 caminho = a_estrela(grafo, s, t, g.coordenadas)
                 if g.coordenadas:
-                    linha["observacao"] = "o tempo inclui montar a estimativa h para todos os vértices, O(n + m); por isso pode passar o Dijkstra num único par."
+                    linha["observacao"] = "o tempo inclui montar a estimativa h para todos os vértices, O(n + m); por isso, num único par, pode levar mais tempo que o Dijkstra."
                 else:
                     linha["observacao"] = "sem coordenadas no grafo digitado, a estimativa é 0 e o A* age como o Dijkstra."
             elif alg == "bellman_ford":
