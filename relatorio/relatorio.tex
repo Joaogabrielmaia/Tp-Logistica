@@ -76,14 +76,14 @@ A Figura~\ref{fig:modos} mostra os modos. No \textbf{modo completo} há um arco 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.45\linewidth]{../docs/diagramas/classes_modelo.pdf}\\[4pt]
-\includegraphics[width=0.8\linewidth]{../docs/diagramas/classes_execucao.pdf}
+\includegraphics[width=0.77\linewidth]{../docs/diagramas/classes_execucao.pdf}
 \caption{Diagramas de classes: modelo e grafo (acima) e solução, resultado e verificação (abaixo). Os algoritmos são funções de módulo.}
 \label{fig:classes}
 \end{figure}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.62\linewidth]{../docs/diagramas/casos_de_uso.pdf}
+\includegraphics[width=0.5\linewidth]{../docs/diagramas/casos_de_uso.pdf}
 \caption{Diagrama de casos de uso.}
 \label{fig:casos}
 \end{figure}
@@ -133,26 +133,20 @@ Seja $n$ o número de clientes, $m$ o de arcos, $R$ o de rotas e $L$ o tamanho d
 
 \section{Implementação e interface}
 
-O código e o histórico de desenvolvimento estão em \url{https://github.com/Joaogabrielmaia/Tp-Logistica}. O sistema tem cerca de 4\,100 linhas (3\,100 em Python e 950 em HTML, CSS e JavaScript), sem dependências externas e com comentários curtos apenas nos pontos não óbvios dos algoritmos. A Figura~\ref{fig:comp} mostra a separação em quatro grupos: modelagem e dados, algoritmos, interface e qualidade. A interface é uma página web servida localmente pela biblioteca padrão, e se comunica com o solver por uma API JSON que valida todas as entradas (tamanho de arquivo, limites de iterações, parâmetros inválidos, caminhos fora da pasta de dados). Pela linha de comando também é possível resolver instâncias e rodar os experimentos. Uma consulta à parte, na linha de comando e na aba Caminhos, roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices, no grafo de uma instância ou num grafo digitado, e todo erro conhecido aparece com o motivo e o que fazer, sem traceback.
+O código e o histórico de desenvolvimento estão em \url{https://github.com/Joaogabrielmaia/Tp-Logistica}. O sistema tem cerca de 4\,100 linhas (3\,100 em Python e 950 em HTML, CSS e JavaScript), sem dependências externas e com comentários curtos apenas nos pontos não óbvios dos algoritmos. O \texttt{heapq} da biblioteca padrão é só a fila de prioridade, uma estrutura de dados como uma lista; o grafo, o Dijkstra e o A* são nossos. O \texttt{numpy} aparece só em \texttt{scripts/figuras.py}, para a inclinação do gráfico de tempo deste relatório, fora da ferramenta. A Figura~\ref{fig:comp} mostra a separação em quatro grupos: modelagem e dados, algoritmos, interface e qualidade. A interface é uma página web servida localmente pela biblioteca padrão, e se comunica com o solver por uma API JSON que valida todas as entradas (tamanho de arquivo, limites de iterações, parâmetros inválidos, caminhos fora da pasta de dados). Pela linha de comando também é possível resolver instâncias e rodar os experimentos. Uma consulta à parte, na linha de comando e na aba Caminhos, roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices, no grafo de uma instância ou num grafo digitado, e todo erro conhecido aparece com o motivo e o que fazer, sem traceback.
 
-As Figuras~\ref{fig:telas1} e~\ref{fig:telas2} mostram as telas, obtidas com a ferramenta em execução. O mapa desenha as rotas sobre o grafo, com prioridade alta e média destacadas; o cronograma mostra, para cada veículo, janelas de tempo, esperas e atendimentos; a tela de carga mostra a ocupação de cada veículo e a ordem de carregamento (o último cliente entregue é o primeiro a entrar); a convergência mostra a evolução do custo e a contribuição de cada etapa; a aba Caminhos compara os algoritmos entre dois vértices e destaca o caminho no grafo. Toda solução exibida traz o resultado da verificação independente.
+A Figura~\ref{fig:telas} mostra as telas, obtidas com a ferramenta em execução. O mapa desenha as rotas sobre o grafo, com prioridade alta e média destacadas; o cronograma mostra, para cada veículo, janelas de tempo, esperas e atendimentos; a tela de carga mostra a ocupação de cada veículo e a ordem de carregamento (o último cliente entregue é o primeiro a entrar); a convergência mostra a evolução do custo e a contribuição de cada etapa; a aba Caminhos compara os algoritmos entre dois vértices e destaca o caminho no grafo. Toda solução exibida traz o resultado da verificação independente.
 
 \begin{figure}[!ht]
 \centering
 \begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_mapa.png}\end{minipage}
 \begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_cronograma.png}\end{minipage}
-\begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_caminhos.png}\end{minipage}
-\caption{Da esquerda para a direita: mapa e cronograma por veículo para 200 entregas do Kaggle, com peso de prioridade $\lambda=0{,}01$, e a aba Caminhos, com os seis algoritmos entre dois vértices da rede viária.}
-\label{fig:telas1}
-\end{figure}
-
-\begin{figure}[!ht]
-\centering
+\begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_caminhos.png}\end{minipage}\\[3pt]
 \begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_carga.png}\end{minipage}
 \begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_convergencia.png}\end{minipage}
 \begin{minipage}{0.325\linewidth}\includegraphics[width=\linewidth]{figuras/tela_viario.png}\end{minipage}
-\caption{Da esquerda para a direita: carga e ordem de carregamento, convergência do custo por etapa e uma instância sintética no modo rede viária, com os trajetos físicos.}
-\label{fig:telas2}
+\caption{Telas da ferramenta. Em cima: mapa e cronograma por veículo para 200 entregas do Kaggle, com $\lambda=0{,}01$, e a aba Caminhos. Embaixo: carga e ordem de carregamento, convergência do custo por etapa e uma instância sintética na rede viária, com os trajetos físicos.}
+\label{fig:telas}
 \end{figure}
 
 \section{Validação}
@@ -292,7 +286,7 @@ Em \exN{} instâncias de 8 clientes, com e sem janelas, a heurística (2\,000 it
   \item A prioridade dos benchmarks e a rede viária são sintéticas e os tempos de viagem são iguais às distâncias (velocidade unitária). No arquivo de entregas do Kaggle a prioridade é do próprio arquivo, mas o sentido da escala, o depósito e a velocidade são suposições nossas. Os resultados desses recursos mostram o mecanismo e não a operação real.
   \item Frota homogênea, depósito único, sem coleta e entrega, sem incerteza na demanda ou no tempo de viagem.
   \item As janelas de Solomon foram definidas para distâncias em linha reta. Na rede viária, em 8 das 56 instâncias (R101 a R103 e RC101 a RC105), 1 ou 2 clientes não chegam a tempo nem sozinhos; a ferramenta diz quais e por quê, e pode resolver os demais deixando esses de fora.
-  \item A comparação com as BKS é por distância total. As BKS de Solomon e do conjunto X usam esse mesmo critério, mas as de Gehring-Homberger minimizam primeiro o número de veículos, e por isso só comparamos distância quando ele coincide. Nas instâncias de 600 a 1000 clientes só rodamos a construção inicial.
+  \item A comparação com as BKS é por distância total. As BKS de Solomon e do conjunto X usam esse mesmo critério, mas as de Gehring-Homberger minimizam primeiro o número de veículos, e por isso só comparamos distância quando ele coincide. Nas instâncias de 600 a 1000 clientes rodamos só a construção e a busca local, sem a ruína e recriação.
   \item Python limita a escala: instâncias de centenas de clientes rodam em segundos a poucos minutos, e milhares de clientes exigiriam vizinhanças limitadas ou outra linguagem.
   \item As medições vêm de uma única máquina e de uma semente por instância; não foram feitos testes estatísticos entre várias sementes.
   \item Em X-n129-k18 a ruína e recriação não melhorou a solução da busca local com o orçamento usado.
@@ -308,7 +302,7 @@ Cada integrante desenvolveu sua parte em uma branch própria do repositório, e 
 
 \begin{table}[!ht]
 \centering
-\small
+\footnotesize
 \begin{tabular}{L{2.2cm}L{9.2cm}}
 \toprule
 Integrante & O que fez \\
