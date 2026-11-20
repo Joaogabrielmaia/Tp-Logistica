@@ -146,7 +146,7 @@ def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
             continue
         if alg == "floyd_warshall" and grafo.n > LIMITE_FLOYD:
             linha["situacao"] = "nao_aplicavel"
-            linha["observacao"] = "Floyd-Warshall é O(n³): com %d vértices seriam cerca de %.0e passos. Limite: %d vértices." % (grafo.n, float(grafo.n) ** 3, LIMITE_FLOYD)
+            linha["observacao"] = "Floyd-Warshall é O(n³): com %d vértices seriam %s passos, minutos em Python. Limite: %d vértices; para um par só, Dijkstra resolve." % (grafo.n, "{:,}".format(grafo.n ** 3).replace(",", "."), LIMITE_FLOYD)
             linhas.append(linha)
             continue
         inicio = time.perf_counter()
@@ -159,7 +159,9 @@ def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
                 caminho = dijkstra_caminho(grafo, s, t)
             elif alg == "a_estrela":
                 caminho = a_estrela(grafo, s, t, g.coordenadas)
-                if not g.coordenadas:
+                if g.coordenadas:
+                    linha["observacao"] = "o tempo inclui montar a estimativa h para todos os vértices, O(n + m); por isso pode passar o Dijkstra num único par."
+                else:
                     linha["observacao"] = "sem coordenadas no grafo digitado, a estimativa é 0 e o A* age como o Dijkstra."
             elif alg == "bellman_ford":
                 caminho = bellman_ford_caminho(grafo, s, t)
@@ -231,6 +233,7 @@ def resumir_grafo(g):
         "fortemente_conexo": fortemente,
         "componentes_fracas": len(fracas),
         "arcos_mao_unica": sum(1 for u in range(grafo.n) for v, _, _ in grafo.adj[u] if u != v and not grafo.tem_arco(v, u)),
+        "agm": [(g.rotulos[u], g.rotulos[v], p) for u, v, p in arvore],
         "agm_peso": sum(p for _, _, p in arvore),
         "agm_arestas": len(arvore),
         "agm_completa": componentes == 1,

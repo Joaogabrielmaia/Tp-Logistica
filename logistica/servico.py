@@ -308,6 +308,7 @@ class Servico:
                 raise ErroExplicado("informe a origem e o destino", "o caminho liga dois vértices.", "preencha os campos Origem e Destino.")
             r = comparar_caminhos(g, origem, destino)
             r["resumo"] = resumir_grafo(g)
+            r["resumo"].pop("agm")
         except (ErroExplicado, CicloNegativo) as e:
             raise ErroRequisicao.de(e)
         coords = g.coordenadas

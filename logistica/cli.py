@@ -177,6 +177,9 @@ def _grafo(args):
     print("  arcos de mão única (sem o arco de volta): %d" % r["arcos_mao_unica"])
     print("  componentes fracamente conexas: %d" % r["componentes_fracas"])
     print("  árvore geradora mínima (Kruskal): %d arestas, peso %.2f%s" % (r["agm_arestas"], r["agm_peso"], "" if r["agm_completa"] else " (floresta: o grafo é desconexo)"))
+    if args.mostrar_agm:
+        for u, v, p in r["agm"]:
+            print("    %s - %s  (%g)" % (u, v, p))
     if r["tem_peso_negativo"]:
         print("  há arcos de peso negativo: só Bellman-Ford e Floyd-Warshall servem para menor caminho")
     return 0
@@ -240,6 +243,7 @@ def principal(argv=None):
     pc.set_defaults(funcao=_caminho)
     pg = sub.add_parser("grafo", help="resumo do grafo: vértices, arcos, graus, conexidade e árvore geradora mínima")
     pg.add_argument("arquivo", nargs="?")
+    pg.add_argument("--mostrar-agm", action="store_true", help="lista as arestas da árvore geradora mínima")
     _adicionar_grafo_proprio(pg)
     pg.set_defaults(funcao=_grafo)
     pb = sub.add_parser("benchmark", help="executa os experimentos e grava os CSV em resultados/")
