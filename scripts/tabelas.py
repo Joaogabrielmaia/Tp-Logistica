@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 import statistics
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -179,6 +180,8 @@ def gerar():
     mil = [l for l in en if l["entregas"] == "1000" and l["peso_prioridade"] == "0.0"][0]
     saida += macro("entMil", mil["veiculos"])
     saida += macro("entMilTempo", fmt(num(mil["tempo_s"]), 0))
+    # vírgula decimal, como se escreve em português; o {,} evita o espaço extra que o LaTeX põe depois da vírgula em modo matemático
+    saida = re.sub(r"(?<=\d)\.(?=\d)", "{,}", saida)
     with open(SAIDA, "w", encoding="utf-8") as f:
         f.write(saida)
     print("gravado", SAIDA)
