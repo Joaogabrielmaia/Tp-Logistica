@@ -299,6 +299,26 @@ Em \exN{} instâncias de 8 clientes, com e sem janelas, a heurística (2\,000 it
 
 A ferramenta modela o problema como grafo dirigido, resolve instâncias com capacidade, janelas de tempo, distância máxima e prioridade, e mostra rotas, tempos e cargas em uma interface gráfica. Em instâncias de referência ficou em média \solGapMedio\% (Solomon) e \xGapMedio\% (conjunto X) acima da melhor solução conhecida, com todas as soluções aprovadas por um verificador independente. A validação em camadas mostrou-se útil: ela revelou um defeito do gerador que o uso casual não mostraria. Como trabalhos futuros, citamos vizinhanças limitadas para instâncias maiores, tempos de viagem variáveis e dados reais de uma operação.
 
+\section{Responsabilidades dos integrantes}
+
+Cada integrante desenvolveu sua parte em uma branch própria do repositório, e as branches foram integradas à branch principal com merge commit, o que preserva o histórico de commits de cada um. O diagrama de casos de uso e a estrutura e o estilo da interface eram, no início, de outro integrante, que deixou a disciplina durante a Etapa~3. Essas partes foram refeitas por João Gabriel, com um visual novo e o mesmo conteúdo. A Tabela~\ref{tab:resp} resume o que cada um fez.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabular}{L{2.2cm}L{9.2cm}}
+\toprule
+Integrante & O que fez \\
+\midrule
+João Gabriel & Estrutura inicial do repositório, integração das branches na principal e commits de ajuste (arquivos fora do lugar, arquivo que faltava, READMEs de cada pasta); modelo e grafo dirigido (union-find, Kruskal, alcançabilidade); leitura das bases (VRPLIB, texto de Solomon e CSV do Kaggle) e rede viária; serviço, servidor HTTP e interface web (estrutura, estilo e lógica: mapa, cronograma, carga, convergência); diagrama de casos de uso e diagramas de classes; experimentos, figuras e tabelas; documento da Etapa 1 e relatório final \\
+Pedro Eduardo & Levantamento das bases de dados; diagramas de componentes e de sequência; avaliação de rotas com folgas de tempo; heurísticas construtivas; busca local com filtros $O(1)$; ruína e recriação e solver; verificador independente; solver exato; testes com os dados do Kaggle \\
+Thomas Ramos & Diagrama de atividades; caminhos mínimos com Dijkstra e seus testes; linha de comando; tutorial de uso \\
+\bottomrule
+\end{tabular}
+\caption{Divisão das responsabilidades.}
+\label{tab:resp}
+\end{table}
+
 \bibliographystyle{sbc}
 \bibliography{referencias}
 \end{document}
