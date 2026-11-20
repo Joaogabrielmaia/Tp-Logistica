@@ -182,6 +182,9 @@ def gerar():
     saida += macro("entMilTempo", fmt(num(mil["tempo_s"]), 0))
     # vírgula decimal, como se escreve em português; o {,} evita o espaço extra que o LaTeX põe depois da vírgula em modo matemático
     saida = re.sub(r"(?<=\d)\.(?=\d)", "{,}", saida)
+    # o abstract é em inglês e usa ponto decimal
+    saida += macro("solGapMedioEn", fmt(statistics.mean(gaps)))
+    saida += macro("xGapMedioEn", fmt(statistics.mean(gx)))
     with open(SAIDA, "w", encoding="utf-8") as f:
         f.write(saida)
     print("gravado", SAIDA)
