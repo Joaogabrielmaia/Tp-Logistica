@@ -3,16 +3,21 @@ from collections import deque
 
 
 class GrafoDirigido:
-    def __init__(self, n):
+    # permitir_negativo só é usado em grafos digitados pelo usuário na consulta de caminhos; os grafos das instâncias
+    # têm distâncias e tempos, que nunca são negativos.
+    def __init__(self, n, permitir_negativo=False):
         self.n = n
         self.adj = [[] for _ in range(n)]
         self.m = 0
         self._mapas = {}
+        self.permitir_negativo = permitir_negativo
 
     def adicionar_arco(self, u, v, peso, tempo=None):
         if not (0 <= u < self.n and 0 <= v < self.n):
             raise ValueError("vértice fora do intervalo")
-        if peso < 0:
+        if math.isnan(peso) or math.isinf(peso):
+            raise ValueError("peso precisa ser um número finito")
+        if peso < 0 and not self.permitir_negativo:
             raise ValueError("peso negativo não suportado")
         self.adj[u].append((v, peso, peso if tempo is None else tempo))
         self.m += 1
@@ -52,7 +57,7 @@ class GrafoDirigido:
     # Grafo com os arcos invertidos; a BFS no original e no transposto confirma que o cliente tem caminho de ida e de
     # volta ao depósito.
     def transposto(self):
-        g = GrafoDirigido(self.n)
+        g = GrafoDirigido(self.n, self.permitir_negativo)
         for u in range(self.n):
             for v, peso, tempo in self.adj[u]:
                 g.adicionar_arco(v, u, peso, tempo)
