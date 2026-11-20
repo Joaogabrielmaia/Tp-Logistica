@@ -1,0 +1,8 @@
+clientes,arcos_grafo_completo,arcos_rede_viaria,construir_completo_s,construir_viario_dijkstra_s,construtivo_e_busca_local_s,mil_iteracoes_s,distancia,veiculos,verificada
+25,650,160,0.003,0.002,0.003,0.091,711.95,6,sim
+50,2550,310,0.001,0.003,0.007,0.132,1112.01,10,sim
+100,10100,606,0.004,0.012,0.03,0.162,2226.7,19,sim
+150,22650,922,0.008,0.027,0.078,0.193,2959.18,25,sim
+200,40200,1218,0.015,0.055,0.13,0.278,3901.05,38,sim
+300,90300,1836,0.032,0.126,0.523,0.621,5507.07,54,sim
+400,160400,2374,0.055,0.237,1.476,0.753,7226.38,72,sim

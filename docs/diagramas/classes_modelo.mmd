@@ -1,0 +1,50 @@
+classDiagram
+direction TB
+class Instancia {
+  +str nome
+  +str tipo
+  +str modo
+  +float capacidade
+  +int frota
+  +matriz D
+  +matriz T
+  +parametros_padrao()
+  +com_prioridades(semente)
+  +caminho_fisico(origem, destino)
+}
+class No {
+  +int id
+  +float x
+  +float y
+  +float demanda
+  +float inicio
+  +float fim
+  +float servico
+  +int prioridade
+}
+class GrafoDirigido {
+  +int n
+  +int m
+  +adicionar_arco(u, v, peso, tempo)
+  +adicionar_aresta(u, v, peso, tempo)
+  +sucessores(u)
+  +tem_arco(u, v)
+  +peso(u, v)
+  +transposto()
+  +matriz_pesos()
+}
+class UnionFind {
+  +encontrar(x)
+  +unir(a, b)
+}
+class Parametros {
+  +float capacidade
+  +int frota_maxima
+  +float distancia_maxima
+  +float custo_fixo_veiculo
+  +float peso_prioridade
+}
+Instancia "1" *-- "n+1" No
+Instancia "1" *-- "1" GrafoDirigido
+GrafoDirigido ..> UnionFind : componentes e Kruskal
+Instancia ..> Parametros : parametros_padrao

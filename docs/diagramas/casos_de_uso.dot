@@ -1,0 +1,36 @@
+digraph G {
+  rankdir=LR;
+  bgcolor="white";
+  pad=0.3;
+  nodesep=0.28;
+  ranksep=0.9;
+  node [fontname="Helvetica", fontsize=11, fontcolor="#14213D"];
+  edge [arrowhead=none, color="#5B667A", penwidth=1.1];
+
+  usuario [label="Planejador\nlogístico", shape=box, style="rounded,filled", fillcolor="#14213D", fontcolor="white", color="#14213D", fontsize=12, margin="0.25,0.15"];
+
+  subgraph cluster_sistema {
+    label="Sistema de roteamento e carga de veículos";
+    labeljust=l;
+    fontname="Helvetica-Bold"; fontsize=12; fontcolor="#14213D";
+    style="rounded,filled"; fillcolor="#F4F6F9"; color="#C9D2DE"; penwidth=1.2;
+    margin=18;
+    node [shape=ellipse, style=filled, fillcolor="white", color="#2B5C8A", penwidth=1.4, margin="0.12,0.06"];
+
+    uc1 [label="Carregar ou gerar\ninstância"];
+    uc2 [label="Escolher modelo de grafo\n(completo ou rede viária)"];
+    uc3 [label="Definir restrições\n(capacidade, tempo, distância,\nprioridade, frota)"];
+    uc4 [label="Calcular rotas", fillcolor="#E6EEF6", penwidth=2];
+    uc7 [label="Comparar com a melhor\nsolução conhecida"];
+    uc5 [label="Visualizar mapa e cronograma"];
+    uc6 [label="Consultar carga e ordem\nde carregamento"];
+    uc8 [label="Verificar a solução\nde forma independente"];
+  }
+
+  usuario -> uc1; usuario -> uc2; usuario -> uc3; usuario -> uc4;
+  usuario -> uc7; usuario -> uc5; usuario -> uc6;
+
+  edge [style=dashed, arrowhead=vee, color="#D9772A", fontcolor="#B9611B", fontname="Helvetica", fontsize=9];
+  uc4 -> uc8 [label="«include»"];
+  uc7 -> uc4 [label="«extend»", constraint=false];
+}

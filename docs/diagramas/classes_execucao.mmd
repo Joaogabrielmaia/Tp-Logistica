@@ -1,0 +1,49 @@
+classDiagram
+direction LR
+class Servico {
+  +listar()
+  +gerar(corpo)
+  +enviar(corpo)
+  +instancia(corpo)
+  +resolver(corpo)
+  +desempenho()
+}
+class Resultado {
+  +list rotas
+  +float custo
+  +float distancia
+  +int veiculos
+  +list etapas
+  +list historico
+}
+class Solucao {
+  +list estados
+  +copiar()
+  +custo()
+  +distancia()
+  +rotas()
+  +compactar()
+}
+class EstadoRota {
+  +list nos
+  +list E
+  +list L
+  +float carga
+  +float dist
+  +float custo
+  +bool viavel
+}
+class Relatorio {
+  +bool viavel
+  +list erros
+  +float distancia
+  +float custo
+}
+class Trechos {
+  +obter(u, v)
+}
+Servico ..> Resultado
+Servico ..> Relatorio
+Resultado "1" o-- "1" Solucao
+Solucao "1" *-- "k" EstadoRota
+Relatorio ..> Trechos : Bellman-Ford

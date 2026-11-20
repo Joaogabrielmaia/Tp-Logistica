@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roteamento de Veículos</title>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="marca">
+    <span class="logo" aria-hidden="true"></span>
+    <div>
+      <h1>Roteamento e Carga de Veículos</h1>
+      <p>Centro logístico · grafos, capacidade, janelas de tempo e prioridade</p>
+    </div>
+  </div>
+  <div id="estado" class="estado" role="status">Pronto</div>
+</header>
+
+<div class="layout">
+
+  <!-- Painel de configuração: os ids são lidos pelo app.js em configuracao() -->
+  <aside class="painel" aria-label="Configuração">
+
+    <section>
+      <h2>Instância</h2>
+      <label>Base de dados<select id="instancia"></select></label>
+      <details>
+        <summary>Gerar instância sintética</summary>
+        <div class="grade2">
+          <label>Clientes<input id="g-n" type="number" min="2" max="500" value="40"></label>
+          <label>Semente<input id="g-semente" type="number" value="1"></label>
+          <label>Capacidade<input id="g-cap" type="number" min="1" value="100"></label>
+          <label class="check"><input id="g-agrupada" type="checkbox">Agrupada</label>
+          <label class="check"><input id="g-janelas" type="checkbox" checked>Janelas</label>
+        </div>
+        <button id="b-gerar" class="sec" type="button">Gerar</button>
+      </details>
+      <details>
+        <summary>Enviar arquivo .vrp</summary>
+        <input id="arquivo" type="file" accept=".vrp,.txt">
+      </details>
+    </section>
+
+    <section>
+      <h2>Grafo</h2>
+      <div class="opcoes" role="radiogroup" aria-label="Modo do grafo">
+        <label class="radio">
+          <input type="radio" name="modo" value="completo" checked>
+          <span><b>Completo</b><small>arcos diretos entre todos os pontos</small></span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="modo" value="viario">
+          <span><b>Rede viária</b><small>vizinhos próximos, caminhos por Dijkstra</small></span>
+        </label>
+      </div>
+      <label class="check"><input id="prioridades" type="checkbox">Prioridades sintéticas (20% alta, 30% média)</label>
+    </section>
+
+    <section>
+      <h2>Restrições</h2>
+      <div class="grade2">
+        <label>Capacidade<input id="p-cap" type="number" min="1" placeholder="da instância"></label>
+        <label>Frota máx.<input id="p-frota" type="number" min="1" placeholder="da instância"></label>
+        <label>Distância máx.<input id="p-dmax" type="number" min="1" placeholder="sem limite"></label>
+        <label>Custo fixo/veículo<input id="p-fixo" type="number" min="0" value="0"></label>
+        <label>Peso prioridade<input id="p-peso" type="number" min="0" step="0.1" value="0"></label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Otimização</h2>
+      <div class="grade2">
+        <label>Iterações
+          <select id="p-iter">
+            <option value="0">0 (construção e busca local)</option>
+            <option value="1000">1.000</option>
+            <option value="5000" selected>5.000</option>
+            <option value="20000">20.000</option>
+            <option value="50000">50.000</option>
+          </select>
+        </label>
+        <label>Tempo limite
+          <select id="p-tempo">
+            <option value="10">10 s</option>
+            <option value="30" selected>30 s</option>
+            <option value="120">2 min</option>
+            <option value="0">sem limite</option>
+          </select>
+        </label>
+        <label>Semente<input id="p-semente" type="number" value="1"></label>
+      </div>
+    </section>
+
+    <button id="b-resolver" class="prim" type="button">Calcular rotas</button>
+  </aside>
+
+  <main class="conteudo">
+    <div id="aviso" class="aviso" hidden></div>
+    <div id="kpis" class="kpis"></div>
+
+    <nav class="abas" role="tablist">
+      <button role="tab" data-aba="mapa" aria-selected="true">Mapa</button>
+      <button role="tab" data-aba="cronograma" aria-selected="false">Cronograma</button>
+      <button role="tab" data-aba="carga" aria-selected="false">Carga</button>
+      <button role="tab" data-aba="convergencia" aria-selected="false">Convergência</button>
+      <button role="tab" data-aba="desempenho" aria-selected="false">Experimentos</button>
+    </nav>
+
+    <section id="aba-mapa" class="aba">
+      <div class="mapa-grade">
+        <div class="mapa-caixa">
+          <canvas id="mapa" aria-label="Mapa das rotas"></canvas>
+          <div id="dica" class="dica" hidden></div>
+          <div class="legenda" id="legenda"></div>
+        </div>
+        <div class="tabela-caixa">
+          <table id="tab-rotas">
+            <thead><tr><th></th><th>Rota</th><th>Cl.</th><th>Carga</th><th>Dist.</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="aba-cronograma" class="aba" hidden><div id="cronograma" class="svg-caixa"></div></section>
+    <section id="aba-carga" class="aba" hidden><div id="carga" class="svg-caixa"></div><div id="carregamento"></div></section>
+    <section id="aba-convergencia" class="aba" hidden><div id="convergencia" class="svg-caixa"></div><div id="etapas"></div></section>
+    <section id="aba-desempenho" class="aba" hidden><div id="desempenho"></div></section>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
