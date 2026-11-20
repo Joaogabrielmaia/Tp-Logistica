@@ -12,6 +12,12 @@ from logistica.servidor import criar_servidor
 OUT = os.path.join(RAIZ, "relatorio", "figuras")
 
 
+def topo(pagina):
+    # o clique em "Calcular rotas" rola a página; volta ao topo para o cabeçalho aparecer no print
+    pagina.evaluate("window.scrollTo(0, 0)")
+    pagina.wait_for_timeout(200)
+
+
 def capturar():
     os.makedirs(OUT, exist_ok=True)
     servidor = criar_servidor(0)
@@ -29,10 +35,12 @@ def capturar():
         pagina.click("#b-resolver")
         pagina.wait_for_selector(".kpi.ok", timeout=120000)
         pagina.wait_for_timeout(500)
+        topo(pagina)
         pagina.screenshot(path=os.path.join(OUT, "tela_mapa.png"))
         for aba in ("cronograma", "carga", "convergencia"):
             pagina.click("button[data-aba=%s]" % aba)
             pagina.wait_for_timeout(400)
+            topo(pagina)
             pagina.screenshot(path=os.path.join(OUT, "tela_%s.png" % aba))
         pagina.click("button[data-aba=mapa]")
         pagina.check("input[name=modo][value=viario]")
@@ -47,6 +55,7 @@ def capturar():
         pagina.click("#b-resolver")
         pagina.wait_for_selector(".kpi.ok", timeout=120000)
         pagina.wait_for_timeout(500)
+        topo(pagina)
         pagina.screenshot(path=os.path.join(OUT, "tela_viario.png"))
         navegador.close()
     servidor.shutdown()
