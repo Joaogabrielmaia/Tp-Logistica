@@ -8,7 +8,8 @@ from .construtivo import ClienteInatendivel
 from .erros import ErroExplicado, explicar, explicar_inatendiveis
 from .leitor import ler_instancia
 from .modelo import Parametros
-from .solver import resolver
+from .erros import motivos_inatendivel
+from .solver import resolver, resolver_atendiveis
 from .verificador import verificar
 
 
@@ -84,11 +85,15 @@ def _resolver(args):
         custo_fixo_veiculo=args.custo_fixo,
         peso_prioridade=args.peso_prioridade,
     )
+    fora = []
     try:
-        res = resolver(inst, par, iteracoes=args.iteracoes, semente=args.semente, tempo_limite=args.tempo_limite)
+        if args.pular_inatendiveis:
+            res, fora = resolver_atendiveis(inst, par, iteracoes=args.iteracoes, semente=args.semente, tempo_limite=args.tempo_limite)
+        else:
+            res = resolver(inst, par, iteracoes=args.iteracoes, semente=args.semente, tempo_limite=args.tempo_limite)
     except ClienteInatendivel as e:
-        raise explicar_inatendiveis(inst, par, e.clientes)
-    rel = verificar(inst, par, res.rotas, res.custo)
+        raise explicar_inatendiveis(inst, par, e.clientes, como_pular="" if args.pular_inatendiveis else "rode com --pular-inatendiveis para atender os demais e listar estes")
+    rel = verificar(inst, par, res.rotas, res.custo, exigir_todos=not fora)
     print("Instância: %s (%d cliente%s, modo %s)" % (inst.nome, inst.n, "" if inst.n == 1 else "s", inst.modo))
     for e in res.etapas:
         print("  %-20s distância %10.2f  veículos %3d  (%.2fs)" % (e["etapa"], e["distancia"], e["veiculos"], e["tempo"]))
@@ -101,7 +106,11 @@ def _resolver(args):
         else:
             # a BKS foi calculada em linha reta; na rede viária os trajetos seguem as ruas e a diferença não se compara
             print("Melhor conhecida (grafo completo): %.2f | não comparável no modo viário" % inst.bks_custo)
-    print("Verificação independente: %s" % ("aprovada" if rel.viavel else "REPROVADA"))
+    if fora:
+        print("Clientes deixados de fora (%d), cada um impossível mesmo sozinho:" % len(fora))
+        for u in fora:
+            print("  cliente %d: %s" % (u, "; ".join(motivos_inatendivel(inst, par, u))))
+    print("Verificação independente: %s%s" % ("aprovada" if rel.viavel else "REPROVADA", " (para os %d clientes atendidos)" % (inst.n - len(fora)) if fora else ""))
     for erro in rel.erros:
         print("  - " + erro)
     if not rel.viavel:
@@ -233,6 +242,7 @@ def principal(argv=None):
     pr.add_argument("--prioridades", action="store_true")
     pr.add_argument("--semente-prioridade", type=int, default=1)
     pr.add_argument("--mostrar-rotas", action="store_true")
+    pr.add_argument("--pular-inatendiveis", action="store_true", help="atende os clientes possíveis e lista os impossíveis, com o motivo")
     pr.set_defaults(funcao=_resolver)
     pc = sub.add_parser("caminho", help="compara BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices")
     pc.add_argument("arquivo", nargs="?", help="instância de dados/ (omita ao usar --arestas)")

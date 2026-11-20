@@ -72,6 +72,22 @@ class Instancia:
         copia._derivar()
         return copia
 
+    # Cópia só com o depósito e os clientes em `manter`, renumerados de 1 a k. As distâncias e tempos vêm da instância
+    # original (caminhos pela rede inteira, inclusive passando por clientes deixados de fora), então o trajeto continua
+    # o mesmo; só o solver usa a cópia, e as rotas voltam à numeração original antes da verificação.
+    def subinstancia(self, manter):
+        indices = [0] + list(manter)
+        copia = copy.copy(self)
+        copia.nos = [self.nos[i] for i in indices]
+        copia.D = [[self.D[a][b] for b in indices] for a in indices]
+        copia.T = [[self.T[a][b] for b in indices] for a in indices]
+        copia.grafo = None
+        copia.predecessores = None
+        copia.bks_custo = None
+        copia.bks_rotas = None
+        copia._derivar()
+        return copia
+
     def caminho_fisico(self, origem, destino):
         if self.predecessores is None:
             return [origem, destino]

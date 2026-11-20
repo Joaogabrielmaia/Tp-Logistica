@@ -64,3 +64,21 @@ def resolver(inst, par, iteracoes=20000, semente=0, tempo_limite=None, usar_otim
         solucao=atual,
         interrompido=prazo is not None and time.time() > prazo,
     )
+
+
+# Resolve só com os clientes que cabem, cada um, numa rota depósito -> cliente -> depósito, e devolve também os que
+# ficaram de fora. Serve para instâncias em que poucos clientes são impossíveis (por exemplo, Solomon na rede viária,
+# onde as ruas são mais longas que a linha reta usada para definir as janelas) sem esconder quem não foi atendido.
+def resolver_atendiveis(inst, par, **opcoes):
+    from .construtivo import clientes_inatendiveis
+    fora = clientes_inatendiveis(inst, par)
+    if not fora:
+        return resolver(inst, par, **opcoes), []
+    manter = [u for u in range(1, inst.n + 1) if u not in set(fora)]
+    if not manter:
+        from .construtivo import ClienteInatendivel
+        raise ClienteInatendivel(fora)
+    res = resolver(inst.subinstancia(manter), par, **opcoes)
+    res.rotas = [[manter[u - 1] for u in rota] for rota in res.rotas]
+    res.solucao = None
+    return res, fora

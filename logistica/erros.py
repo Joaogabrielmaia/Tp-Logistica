@@ -97,12 +97,12 @@ def motivos_inatendivel(inst, par, u):
     return motivos or ["combinação das restrições"]
 
 
-def explicar_inatendiveis(inst, par, clientes, limite=5):
+def explicar_inatendiveis(inst, par, clientes, limite=5, como_pular=""):
     linhas = ["cliente %d: %s" % (u, "; ".join(motivos_inatendivel(inst, par, u))) for u in clientes[:limite]]
     if len(clientes) > limite:
         linhas.append("e mais %d clientes" % (len(clientes) - limite))
     return ErroExplicado(
         "%d cliente(s) impossível(is) de atender: %s" % (len(clientes), ", ".join(map(str, clientes[:10])) + (" ..." if len(clientes) > 10 else "")),
         "cada cliente precisa caber em pelo menos uma rota depósito -> cliente -> depósito. " + " | ".join(linhas),
-        "relaxe a restrição que aparece no motivo (capacidade, distância máxima ou tempo) ou retire esses clientes.",
+        "relaxe a restrição que aparece no motivo (capacidade, distância máxima ou tempo)" + (", ou " + como_pular if como_pular else " ou retire esses clientes") + ".",
     )

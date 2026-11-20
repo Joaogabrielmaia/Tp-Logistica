@@ -10,7 +10,8 @@ from .erros import ErroExplicado, explicar, explicar_inatendiveis
 from .grafo import clientes_inalcancaveis
 from .leitor import FORMATOS, ErroInstancia, gerar_instancia_sintetica, ler_instancia, listar_instancias
 from .modelo import NOMES_PRIORIDADE, Parametros
-from .solver import resolver
+from .erros import motivos_inatendivel
+from .solver import resolver, resolver_atendiveis
 from .verificador import verificar
 
 LIMITE_ITERACOES = 200000
@@ -223,18 +224,25 @@ class Servico:
         limite_tempo = float(corpo.get("tempo_limite", 0) or 0)
         if not (0 <= limite_tempo <= 3600):
             raise ErroRequisicao("o tempo limite deve estar entre 0 e 3600 segundos", "0 quer dizer sem limite; acima de 1 hora a requisição prenderia o servidor.", "escolha um valor da lista.")
+        pular = bool(corpo.get("pular_inatendiveis"))
         inalcancaveis = clientes_inalcancaveis(inst.grafo, 0)
-        if inalcancaveis:
+        if inalcancaveis and not pular:
             raise ErroRequisicao("clientes sem caminho de ida e volta ao depósito: %s" % inalcancaveis[:10],
                                  "a BFS no grafo e no grafo transposto mostrou que esses clientes não são alcançáveis a partir do depósito, ou não têm como voltar.",
-                                 "use o grafo completo ou outra semente da rede viária.")
+                                 "use o grafo completo, outra semente da rede viária ou marque Pular clientes impossíveis.")
+        fora = []
         try:
-            res = resolver(inst, par, iteracoes=iteracoes, semente=semente, tempo_limite=limite_tempo or None)
+            if pular:
+                res, fora = resolver_atendiveis(inst, par, iteracoes=iteracoes, semente=semente, tempo_limite=limite_tempo or None)
+            else:
+                res = resolver(inst, par, iteracoes=iteracoes, semente=semente, tempo_limite=limite_tempo or None)
         except ClienteInatendivel as e:
-            erro = explicar_inatendiveis(inst, par, e.clientes)
+            erro = explicar_inatendiveis(inst, par, e.clientes, como_pular="" if pular else "marque Pular clientes impossíveis (passo 3) para atender os demais e listar estes")
             raise ErroRequisicao(erro.mensagem, erro.motivo, erro.dica)
-        rel = verificar(inst, par, res.rotas, res.custo, exigir_todos=True)
-        return self._json_resultado(inst, par, res, rel)
+        rel = verificar(inst, par, res.rotas, res.custo, exigir_todos=not fora)
+        dados = self._json_resultado(inst, par, res, rel)
+        dados["fora"] = [{"cliente": u, "motivo": "; ".join(motivos_inatendivel(inst, par, u))} for u in fora]
+        return dados
 
     def _json_resultado(self, inst, par, res, rel):
         rotas = []
