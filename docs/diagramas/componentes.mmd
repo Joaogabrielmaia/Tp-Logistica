@@ -1,0 +1,40 @@
+flowchart TB
+subgraph P1[Modelagem e dados]
+  direction LR
+  A[modelo] ~~~ B[grafo] ~~~ C[rede_viaria] ~~~ D[leitor]
+end
+subgraph P2[Algoritmos]
+  direction LR
+  E[caminhos] ~~~ F[avaliacao] ~~~ G[construtivo] ~~~ H[busca_local] ~~~ I[otimizador] ~~~ J[solver]
+end
+subgraph P3[Interface]
+  direction LR
+  K[servico] ~~~ L[servidor] ~~~ M[web] ~~~ N[cli]
+end
+subgraph P4[Qualidade]
+  direction LR
+  O[verificador] ~~~ Q[exato] ~~~ R[benchmark] ~~~ T[testes]
+end
+M --> L
+L --> K
+K --> J
+K --> D
+K --> O
+N --> J
+J --> G
+J --> H
+J --> I
+G --> F
+H --> F
+I --> F
+F --> A
+D --> A
+D --> C
+D --> E
+C --> B
+E --> B
+O --> B
+Q --> O
+R --> J
+R --> Q
+T --> O
