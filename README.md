@@ -29,7 +29,8 @@ python main.py resolver dados/solomon/RC101.vrp --prioridades --peso-prioridade 
 python main.py resolver dados/cvrp-x/X-n101-k25.vrp --modo viario
 python main.py resolver dados/kaggle/gehring-homberger/c1_2_1.txt --iteracoes 2000
 python main.py resolver dados/kaggle/ecommerce/entregas.csv --iteracoes 500
-python main.py resolver dados/solomon/R101.vrp --modo viario --mao-unica 0.3
+python main.py resolver dados/solomon/R102.vrp --modo viario --pular-inatendiveis
+python main.py resolver dados/kaggle/ecommerce/entregas_100.csv --modo viario --mao-unica 0.3
 python main.py caminho dados/solomon/R101.vrp 0 15 --modo viario
 python main.py caminho --arestas "A B 4; A C 1; C B 1; B D 1" A D
 python main.py grafo dados/solomon/R101.vrp --modo viario --mostrar-agm

@@ -55,6 +55,10 @@ Todo erro aparece em três partes: o que aconteceu, **Por quê** e **O que fazer
 desconhecido, capacidade menor que a demanda de um cliente, frota 0, cliente que não cabe na janela de tempo nem
 sozinho, vértice que não existe na consulta de caminhos.
 
+Quando poucos clientes são impossíveis (por exemplo, R101 na rede viária: as ruas são mais longas que a linha reta usada
+nas janelas de Solomon), marque **Pular clientes impossíveis** no passo 3 (ou use `--pular-inatendiveis`). A ferramenta
+atende todos os outros, mostra num aviso amarelo quem ficou de fora e por quê, e o verificador confere as rotas.
+
 ## 7. Outras formas de usar
 
 ```
