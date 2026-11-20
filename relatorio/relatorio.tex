@@ -10,16 +10,12 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \sloppy
 
-\newcommand{\PA}{João Gabriel}
-\newcommand{\PB}{Davi Vinicius}
-\newcommand{\PC}{Thomas Ramos}
-\newcommand{\PD}{Pedro Eduardo}
 
 \input{tabelas_geradas.tex}
 
 \title{Roteamento e Carga de Veículos em Centros Logísticos:\\ uma ferramenta baseada em grafos}
 
-\author{João Gabriel Maia da Costa\inst{1}, Davi Vinicius Barbosa de Oliveira\inst{1},\\ Thomas Ramos Oliveira\inst{1}, Pedro Eduardo Pimenta\inst{1}}
+\author{João Gabriel Maia da Costa\inst{1}, Thomas Ramos Oliveira\inst{1},\\ Pedro Eduardo Pimenta\inst{1}}
 
 \address{Engenharia de Software -- Pontifícia Universidade Católica de Minas Gerais (PUC Minas)\\ Teoria dos Grafos -- Trabalho Prático, Tema 10}
 
@@ -302,26 +298,6 @@ Em \exN{} instâncias de 8 clientes, com e sem janelas, a heurística (2\,000 it
 \section{Conclusões}
 
 A ferramenta modela o problema como grafo dirigido, resolve instâncias com capacidade, janelas de tempo, distância máxima e prioridade, e mostra rotas, tempos e cargas em uma interface gráfica. Em instâncias de referência ficou em média \solGapMedio\% (Solomon) e \xGapMedio\% (conjunto X) acima da melhor solução conhecida, com todas as soluções aprovadas por um verificador independente. A validação em camadas mostrou-se útil: ela revelou um defeito do gerador que o uso casual não mostraria. Como trabalhos futuros, citamos vizinhanças limitadas para instâncias maiores, tempos de viagem variáveis e dados reais de uma operação.
-
-\section{Responsabilidades dos integrantes}
-
-Todos os integrantes revisaram e entendem todo o código. Cada integrante desenvolveu sua parte em uma branch própria do repositório, e as partes foram integradas à branch principal por pull requests revisados pelos demais. A Tabela abaixo resume o que cada um fez.
-
-\begin{table}[!ht]
-\centering
-\small
-\begin{tabular}{L{2.2cm}L{9.2cm}}
-\toprule
-Integrante & O que fez \\
-\midrule
-\PA{} & Estrutura inicial do repositório e integração das branches; modelo e grafo dirigido (union-find, Kruskal, alcançabilidade); leitura das bases (VRPLIB, texto de Solomon e CSV do Kaggle) e rede viária; serviço, servidor HTTP e lógica da interface (mapa, cronograma, carga, convergência); experimentos, figuras e tabelas; diagramas de classes; documento da Etapa 1 e relatório final \\
-\PD{} & Levantamento das bases de dados; diagramas de componentes e de sequência; avaliação de rotas com folgas de tempo; heurísticas construtivas; busca local com filtros $O(1)$; ruína e recriação e solver; verificador independente; solver exato; testes com os dados do Kaggle \\
-\PC{} & Diagrama de atividades; caminhos mínimos com Dijkstra e seus testes; linha de comando; tutorial de uso \\
-\PB{} & Diagrama de casos de uso; estrutura e estilo da interface web (HTML e CSS); roteiro da demonstração; revisão do documento da Etapa 1 e do relatório final, com apoio na compilação no Overleaf; slides da apresentação; condução e narração do vídeo \\
-\bottomrule
-\end{tabular}
-\caption{Divisão das responsabilidades.}
-\end{table}
 
 \bibliographystyle{sbc}
 \bibliography{referencias}
