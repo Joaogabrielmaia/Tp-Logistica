@@ -12,6 +12,6 @@ Cada CSV aqui foi gerado por `python main.py benchmark <nome>` (ou `todos`). As 
 | `escala.csv` | Tempo de cada fase de 25 a 400 clientes, para comparar com a complexidade esperada. |
 | `grafo_viario.csv` | Grafo completo contra rede viária: número de arcos e quanto a distância aumenta. |
 | `prioridade.csv` | Efeito do peso λ da prioridade no horário de atendimento dos clientes urgentes. |
-| `exato.csv` | Heurística contra o solver exato em instâncias de até 9 clientes. |
+| `exato.csv` | Heurística contra o solver exato em 50 instâncias de 8 clientes. |
 
 Em todas as linhas a coluna `verificada` diz se a solução passou no verificador independente. Todas passaram.

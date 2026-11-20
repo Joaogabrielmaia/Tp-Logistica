@@ -23,7 +23,7 @@ Para entender o fluxo, sugiro ler os arquivos nesta ordem: o dado entra pelo lei
 | `busca_local.py` | Melhora a solução com 4 movimentos: realocar, trocar, inverter trecho (2-opt) e trocar finais de rota. Filtros de custo constante descartam antes os candidatos que não têm chance, o que deixou a busca de 2 a 8 vezes mais rápida sem mudar as rotas. |
 | `otimizador.py` | Ruína e recriação: tira um pedaço de clientes próximos e reinsere, aceitando às vezes uma solução pior (recozimento simulado) para não travar num ótimo local. |
 | `solver.py` | Junta tudo: construção, busca local, ruína e recriação e polimento final, respeitando o tempo limite escolhido. |
-| `exato.py` | Solver exato para instâncias de até 9 clientes. Serve só para conferir se a heurística chega no ótimo nos casos pequenos. |
+| `exato.py` | Solver exato para instâncias de até 9 clientes (nos experimentos usamos 8). Serve só para conferir se a heurística chega no ótimo nos casos pequenos. |
 | `verificador.py` | Conferência independente da solução. Recalcula o custo de cada trecho direto do grafo, sem usar as matrizes do solver; no modo viário usa Bellman-Ford, que é um algoritmo diferente do Dijkstra usado na solução. Se uma restrição for violada, ele aponta qual. |
 
 ## 3. Interface e execução
