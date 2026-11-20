@@ -4,7 +4,7 @@ Trabalho Prático de Teoria dos Grafos (PUC Minas), Tema 10: planejamento de rot
 **tempo, distância, prioridade e capacidade de carga** dos veículos. Implementação em Python 3, somente biblioteca
 padrão, sem bibliotecas de grafos (NetworkX e similares não são usadas em nenhum ponto).
 
-Tutorial de uso: `docs/tutorial.md`. Roteiro da demonstração: `docs/roteiro_demo.md`.
+Tutorial de uso: `docs/tutorial.md`.
 
 ## Como executar
 

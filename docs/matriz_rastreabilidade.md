@@ -28,4 +28,4 @@ Observação do enunciado: só são avaliadas entregas com todos os itens; a fal
 (vídeo e slides) são obrigatórios e precisam estar prontos antes da entrega.
 
 
-Ver `docs/roteiro_demo.md` para o roteiro da demonstração e `docs/tutorial.md` para o tutorial de uso.
+Ver `docs/tutorial.md` para o tutorial de uso.
