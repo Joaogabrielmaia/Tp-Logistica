@@ -544,6 +544,8 @@ async function calcularCaminho() {
   const proprio = $("c-proprio").checked;
   const corpo = Object.assign(configuracao(), { origem: $("c-origem").value.trim(), destino: $("c-destino").value.trim(), proprio, arestas: $("c-arestas").value, dirigido: $("c-dirigido").checked });
   definirEstado("Calculando caminhos…", true);
+  consulta.resultado = null;
+  renderCaminho("Calculando…");
   try {
     consulta.resultado = await chamar("/api/caminho", corpo);
     const ok = consulta.resultado.linhas.filter((l) => l.indices);
@@ -557,13 +559,13 @@ async function calcularCaminho() {
   renderCaminho();
 }
 
-function renderCaminho() {
+function renderCaminho(mensagem) {
   const r = consulta.resultado;
   const info = $("c-info"), tabela = $("c-tabela"), desenho = $("c-desenho");
   if (!r) {
     info.replaceChildren();
     tabela.replaceChildren();
-    vazio(desenho, "Informe origem e destino e clique em Calcular caminho.");
+    vazio(desenho, typeof mensagem === "string" ? mensagem : "Informe origem e destino e clique em Calcular caminho.");
     return;
   }
   const g = r.resumo;
