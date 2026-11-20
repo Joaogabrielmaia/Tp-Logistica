@@ -12,8 +12,8 @@ como um grafo dirigido ponderado. Escrita em Python, só com a biblioteca padrã
 | Documento da Etapa 1 (PDF) | [`docs/etapa1/etapa1.pdf`](docs/etapa1/etapa1.pdf) |
 | Código LaTeX dos relatórios | [`relatorio/relatorio.tex`](relatorio/relatorio.tex), [`docs/etapa1/etapa1.tex`](docs/etapa1/etapa1.tex) |
 | Projeto no Overleaf | *(link a adicionar)* |
-| Zip com o LaTeX dos relatórios | *(arquivo a adicionar)* |
-| Slides da apresentação | *(arquivo a adicionar)* |
+| Zip com o LaTeX dos relatórios (pronto para o Overleaf) | [`entrega/latex_relatorios.zip`](entrega/latex_relatorios.zip) |
+| Slides da apresentação (PDF) | [`apresentacao/slides.pdf`](apresentacao/slides.pdf) |
 | Vídeo de demonstração | *(link a adicionar)* |
 | Tutorial de uso | [`docs/tutorial.md`](docs/tutorial.md) |
 
@@ -145,6 +145,8 @@ resultados/           CSV dos experimentos
 comparacao_networkx/  só a título de comparação: os mesmos grafos na NetworkX (a ferramenta não a usa)
 docs/                 Etapa 1, diagramas UML, tutorial, matriz de rastreabilidade e imagens deste README
 relatorio/            relatório final em LaTeX (template SBC) e PDF
+apresentacao/         slides da apresentação em PDF
+entrega/              zip com o LaTeX dos dois relatórios, pronto para o Overleaf
 scripts/              geração das tabelas, figuras e prints do relatório, e o zip de entrega
 ```
 
