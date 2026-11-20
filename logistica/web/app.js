@@ -144,7 +144,12 @@ async function resolver() {
     estado.destaque = null;
     renderTudo();
     definirEstado("Concluído em " + fmt(r.resultado.tempo, 2) + " s");
-    if (r.fora && r.fora.length) {
+    if (!r.verificacao.viavel) {
+      const aviso = new Error("Verificação reprovada: " + r.verificacao.erros.slice(0, 3).join("; "));
+      aviso.motivo = "o solver garante capacidade, janelas de tempo e distância máxima, mas trata a frota como meta: quando não existe solução com a frota pedida, ele mostra a melhor que encontrou e o verificador independente aponta o que foi violado, em vez de esconder.";
+      aviso.dica = "aumente a Frota máx. para pelo menos " + r.resultado.veiculos + " veículos (o que esta solução usou) ou deixe o campo vazio para usar o da instância.";
+      mostrarAviso(aviso, "alerta");
+    } else if (r.fora && r.fora.length) {
       const aviso = new Error(r.fora.length + " cliente(s) ficaram de fora: " + r.fora.map((f) => f.cliente).join(", "));
       aviso.motivo = "cada um é impossível mesmo sozinho. " + r.fora.map((f) => "Cliente " + f.cliente + ": " + f.motivo).join(" | ");
       aviso.dica = "as rotas mostradas atendem todos os outros e foram aprovadas pelo verificador; para incluí-los, relaxe a restrição citada.";
