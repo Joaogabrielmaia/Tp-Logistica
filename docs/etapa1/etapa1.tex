@@ -182,6 +182,25 @@ Até 20/11 & Etapa 3: experimentos, relatório em LaTeX (SBC), vídeo e slides \
 \caption{Cronograma.}
 \end{table}
 
+\subsection{Divisão de responsabilidades}
+
+Cada integrante desenvolve sua parte em uma branch própria, e as branches são integradas à branch principal com merge commit, preservando o histórico de cada um. Essa divisão deixa claro quem responde por qual parte e permite que cada integrante explique suas funcionalidades na apresentação, sem perder a visão do conjunto. O diagrama de casos de uso e a estrutura e o estilo da interface eram, no início, de outro integrante, que deixou a disciplina durante a Etapa~3. Essas partes foram refeitas por João Gabriel, com um visual novo e o mesmo conteúdo.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabular}{L{2.2cm}L{8.4cm}}
+\toprule
+Integrante & Responsabilidades \\
+\midrule
+João Gabriel & Estrutura inicial do repositório, integração das branches na principal e commits de ajuste (arquivos fora do lugar, arquivo que faltava, READMEs de cada pasta); modelo e grafo dirigido (union-find, Kruskal, alcançabilidade); leitura das bases (VRPLIB, texto de Solomon e CSV do Kaggle) e rede viária; serviço, servidor HTTP e interface web (estrutura, estilo e lógica: mapa, cronograma, carga, convergência); diagrama de casos de uso e diagramas de classes; experimentos, figuras e tabelas; documento da Etapa 1 e relatório final \\
+Pedro Eduardo & Levantamento das bases de dados; diagramas de componentes e de sequência; avaliação de rotas com folgas de tempo; heurísticas construtivas; busca local com filtros $O(1)$; ruína e recriação e solver; verificador independente; solver exato; testes com os dados do Kaggle \\
+Thomas Ramos & Diagrama de atividades; caminhos mínimos com Dijkstra e seus testes; linha de comando; tutorial de uso \\
+\bottomrule
+\end{tabular}
+\caption{Divisão das responsabilidades.}
+\end{table}
+
 \subsection{Estratégia de testes e critérios de aceitação}
 
 \begin{itemize}
