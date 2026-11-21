@@ -634,7 +634,14 @@ async function iniciar() {
   $("b-gerar").addEventListener("click", gerar);
   $("arquivo").addEventListener("change", enviar);
   $("b-caminho").addEventListener("click", calcularCaminho);
-  $("c-proprio").addEventListener("change", () => ($("c-texto").hidden = !$("c-proprio").checked));
+  // origem e destino trocam junto com o grafo: os vértices da instância são números, os do grafo digitado são rótulos
+  const extremos = { instancia: ["0", "1"], proprio: ["A", "B"] };
+  $("c-proprio").addEventListener("change", () => {
+    const proprio = $("c-proprio").checked;
+    extremos[proprio ? "instancia" : "proprio"] = [$("c-origem").value, $("c-destino").value];
+    [$("c-origem").value, $("c-destino").value] = extremos[proprio ? "proprio" : "instancia"];
+    $("c-texto").hidden = !proprio;
+  });
   $("instancia").addEventListener("change", visualizarInstancia);
   document.querySelectorAll("input[name=modo]").forEach((r) => r.addEventListener("change", visualizarInstancia));
   $("prioridades").addEventListener("change", visualizarInstancia);
