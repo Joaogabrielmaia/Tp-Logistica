@@ -136,6 +136,7 @@ class TestGrafoDigitado(unittest.TestCase):
             with self.assertRaises(ErroExplicado) as ctx:
                 grafo_de_texto(texto)
             self.assertTrue(ctx.exception.motivo)
+        self._arquivo_grande_pela_linha_de_comando()
 
     def test_virgula_decimal_e_vertice_isolado(self):
         g = grafo_de_texto("A B 2,5\nC")
@@ -162,6 +163,32 @@ class TestGrafoDigitado(unittest.TestCase):
         self.assertEqual(r["vertices"], 101)
         self.assertTrue(r["fortemente_conexo"])
         self.assertEqual(r["agm_arestas"], 100)
+
+
+    def _arquivo_grande_pela_linha_de_comando(self):
+        # 2500 vértices em grade: o campo de texto recusa, o arquivo pela linha de comando aceita, e os três
+        # algoritmos de menor custo chegam ao mesmo valor
+        lado = 50
+        linhas = []
+        for v in range(lado * lado):
+            if (v + 1) % lado:
+                linhas.append("%d %d %d" % (v, v + 1, 1 + v % 7))
+            if v + lado < lado * lado:
+                linhas.append("%d %d %d" % (v, v + lado, 1 + v % 5))
+        texto = "\n".join(linhas)
+        with self.assertRaises(ErroExplicado):
+            grafo_de_texto(texto)
+        g = grafo_de_texto(texto, arquivo=True)
+        r = comparar_caminhos(g, "0", str(lado * lado - 1), ("dijkstra", "a_estrela", "bellman_ford"))
+        custos = {l["custo"] for l in r["linhas"]}
+        self.assertEqual(len(custos), 1)
+        with tempfile.TemporaryDirectory() as d:
+            caminho = os.path.join(d, "grade.txt")
+            with open(caminho, "w", encoding="utf-8") as arq:
+                arq.write(texto)
+            with contextlib.redirect_stdout(io.StringIO()) as saida:
+                self.assertEqual(principal(["caminho", "--grafo-arquivo", caminho, "0", str(lado * lado - 1), "--algoritmos", "dijkstra"]), 0)
+            self.assertIn("Dijkstra", saida.getvalue())
 
 
 class TestErrosExplicados(unittest.TestCase):

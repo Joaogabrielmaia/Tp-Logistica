@@ -138,7 +138,7 @@ def _grafo_dos_args(args):
                 raise ErroExplicado("arquivo não encontrado: " + args.grafo_arquivo, "o caminho do arquivo de arestas não existe.", "confira o nome do arquivo.")
             with open(args.grafo_arquivo, encoding="utf-8") as f:
                 texto = f.read()
-        return grafo_de_texto(texto, dirigido=args.dirigido)
+        return grafo_de_texto(texto, dirigido=args.dirigido, arquivo=bool(args.grafo_arquivo))
     if not args.arquivo:
         raise ErroExplicado("informe uma instância ou um grafo próprio",
                             "o caminho é calculado sobre um grafo: o de uma instância de dados/ ou um digitado com --arestas.",

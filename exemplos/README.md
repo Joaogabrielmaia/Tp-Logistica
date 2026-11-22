@@ -13,4 +13,18 @@ para mostrar que o erro é tratado e explicado (o que aconteceu, por quê e o qu
 | `colunas_erradas.csv` | inválido: CSV sem as colunas das entregas do Kaggle | `python main.py resolver exemplos/colunas_erradas.csv` |
 | `nao_e_instancia.png` | inválido: formato que a ferramenta não lê | `python main.py resolver exemplos/nao_e_instancia.png` |
 
+## Grafo grande
+
+Para testar os algoritmos de caminho em escala, `gerar_grafo_grande.py` cria um grafo em grade com atalhos (por
+padrão, 50 000 vértices e cerca de 125 000 arestas) e salva em `exemplos/grafo_grande.txt`:
+
+```
+python exemplos/gerar_grafo_grande.py 50000
+python main.py caminho --grafo-arquivo exemplos/grafo_grande.txt 0 49999
+```
+
+Leva uns 2 segundos: BFS, DFS, Dijkstra, A* e Bellman-Ford rodam, e o Floyd-Warshall é recusado com a estimativa de
+tempo (O(n³), uns 145 dias). O arquivo pela linha de comando aceita até 1 milhão de vértices; o campo de texto da
+interface fica em 2 000, porque é para exemplos pequenos.
+
 Na interface, os mesmos arquivos podem ser enviados pelo botão "Enviar arquivo".

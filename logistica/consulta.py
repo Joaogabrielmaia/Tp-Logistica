@@ -26,6 +26,9 @@ O_QUE_GARANTE = {
 }
 LIMITE_VERTICES_TEXTO = 2000
 LIMITE_ARESTAS_TEXTO = 20000
+# Arquivo de arestas pela linha de comando: grafos grandes, para medir BFS, Dijkstra e Bellman-Ford em escala.
+LIMITE_VERTICES_ARQUIVO = 1000000
+LIMITE_ARESTAS_ARQUIVO = 5000000
 # Floyd-Warshall é O(n^3): com 1001 vértices seriam cerca de 10^9 passos em Python.
 LIMITE_FLOYD = 300
 
@@ -65,7 +68,7 @@ def grafo_da_instancia(inst):
 
 # Lê um grafo digitado como lista de arestas, uma por linha (ou separadas por ';'): "origem destino peso". O peso é
 # opcional (vale 1) e os vértices podem ser números ou nomes. Uma linha com um só vértice cria um vértice isolado.
-def grafo_de_texto(texto, dirigido=False):
+def grafo_de_texto(texto, dirigido=False, arquivo=False):
     if not isinstance(texto, str) or not texto.strip():
         raise ErroExplicado(
             "nenhuma aresta informada",
@@ -109,11 +112,17 @@ def grafo_de_texto(texto, dirigido=False):
                     "NaN e infinito não são pesos válidos: a soma do caminho deixaria de fazer sentido.",
                     "informe um número finito.")
         arcos.append((vertice(campos[0]), vertice(campos[1]), peso))
-    if len(rotulos) > LIMITE_VERTICES_TEXTO or len(arcos) > LIMITE_ARESTAS_TEXTO:
+    lim_v, lim_a = (LIMITE_VERTICES_ARQUIVO, LIMITE_ARESTAS_ARQUIVO) if arquivo else (LIMITE_VERTICES_TEXTO, LIMITE_ARESTAS_TEXTO)
+    if len(rotulos) > lim_v or len(arcos) > lim_a:
+        if arquivo:
+            raise ErroExplicado(
+                "arquivo de arestas grande demais (%d vértices, %d arestas)" % (len(rotulos), len(arcos)),
+                "o limite é %d vértices e %d arestas, para caber na memória de um computador comum." % (lim_v, lim_a),
+                "use um grafo menor.")
         raise ErroExplicado(
             "grafo digitado grande demais (%d vértices, %d arestas)" % (len(rotulos), len(arcos)),
-            "o campo de texto é para grafos pequenos de demonstração; o limite é %d vértices e %d arestas." % (LIMITE_VERTICES_TEXTO, LIMITE_ARESTAS_TEXTO),
-            "para grafos grandes, use uma instância de dados/ no modo rede viária.")
+            "o campo de texto é para grafos pequenos de demonstração; o limite é %d vértices e %d arestas." % (lim_v, lim_a),
+            "para grafos grandes, use um arquivo de arestas pela linha de comando (--grafo-arquivo).")
     if not rotulos:
         raise ErroExplicado("nenhuma aresta informada", "todas as linhas estão vazias ou são comentários.", "escreva ao menos uma aresta, por exemplo: A B 5")
     g = GrafoDirigido(len(rotulos), permitir_negativo=True)
@@ -133,6 +142,15 @@ def _tem_negativo(grafo):
     return any(peso < 0 for u in range(grafo.n) for _, peso, _ in grafo.adj[u])
 
 
+# Ordem de grandeza do tempo, supondo uns 10 milhões de passos simples por segundo em Python.
+def _duracao_estimada(passos):
+    s = passos / 1e7
+    for divisor, limite, nome in ((1, 60, "segundos"), (60, 3600, "minutos"), (3600, 86400, "horas"), (86400, 86400 * 365, "dias")):
+        if s < limite:
+            return "uns %d %s" % (max(1, round(s / divisor)), nome)
+    return "uns %s anos" % "{:,}".format(round(s / (86400 * 365))).replace(",", ".")
+
+
 def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
     s, t = g.indice(origem), g.indice(destino)
     grafo = g.grafo
@@ -147,7 +165,7 @@ def comparar_caminhos(g, origem, destino, algoritmos=ALGORITMOS):
             continue
         if alg == "floyd_warshall" and grafo.n > LIMITE_FLOYD:
             linha["situacao"] = "nao_aplicavel"
-            linha["observacao"] = "Floyd-Warshall é O(n³): com %d vértices seriam %s passos, minutos em Python. Limite: %d vértices; para um par só, Dijkstra resolve." % (grafo.n, "{:,}".format(grafo.n ** 3).replace(",", "."), LIMITE_FLOYD)
+            linha["observacao"] = "Floyd-Warshall é O(n³): com %d vértices seriam %s passos, %s em Python. Limite: %d vértices; para um par só, Dijkstra resolve." % (grafo.n, "{:,}".format(grafo.n ** 3).replace(",", "."), _duracao_estimada(grafo.n ** 3), LIMITE_FLOYD)
             linhas.append(linha)
             continue
         inicio = time.perf_counter()
