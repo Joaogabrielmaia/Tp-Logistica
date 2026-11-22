@@ -15,7 +15,7 @@ from .solver import resolver, resolver_atendiveis
 from .verificador import verificar
 
 LIMITE_ITERACOES = 200000
-LIMITE_CLIENTES_SINTETICOS = 500
+LIMITE_CLIENTES_SINTETICOS = 2000
 
 
 # Erro devolvido à interface com status 400: além da mensagem, leva o motivo e o que fazer, que a tela mostra.

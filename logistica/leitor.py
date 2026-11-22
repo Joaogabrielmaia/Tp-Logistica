@@ -11,9 +11,16 @@ class ErroInstancia(ValueError):
     pass
 
 
+# O roteamento guarda as matrizes de distância e de tempo entre todo par de pontos (n² valores cada): com 2000 clientes
+# já são uns 1,5 GB de memória em Python. Acima disso a instância é recusada antes de montar as matrizes.
+LIMITE_CLIENTES = 2000
+
+
 def construir_instancia(nome, tipo, nos, capacidade, frota, modo="completo", regra="exato", semente=0, k_vizinhos=5, bks_custo=None, bks_rotas=None, mao_unica=0.0):
     if len(nos) < 2:
         raise ErroInstancia("a instância precisa de um depósito e ao menos um cliente")
+    if len(nos) - 1 > LIMITE_CLIENTES:
+        raise ErroInstancia("instância grande demais: %d clientes (o limite é %d)" % (len(nos) - 1, LIMITE_CLIENTES))
     predecessores = None
     if modo == "completo":
         grafo = grafo_completo(nos, regra)

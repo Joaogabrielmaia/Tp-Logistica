@@ -49,6 +49,10 @@ python -m unittest discover -s testes -t .
 - **Explica os erros:** arquivo inválido, parâmetro fora da faixa, cliente impossível de atender. Tudo aparece em três
   partes, na tela e no terminal: o que aconteceu, por quê e o que fazer.
 
+**Limites:** o roteamento aceita até 2000 clientes (gerados na interface ou lidos de arquivo), porque guarda a
+distância entre todo par de pontos (n² valores); acima disso a ferramenta recusa e explica o motivo. Para caminho
+mínimo, a linha de comando aceita grafos de até 1 milhão de vértices (`exemplos/gerar_grafo_grande.py`).
+
 | Caminhos entre dois vértices | Cronograma por veículo |
 |---|---|
 | ![Aba Caminhos](relatorio/figuras/tela_caminhos.png) | ![Cronograma](relatorio/figuras/tela_cronograma.png) |

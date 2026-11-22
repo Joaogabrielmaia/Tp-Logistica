@@ -4,7 +4,7 @@ import tempfile
 import unittest
 
 from logistica.grafo import clientes_inalcancaveis
-from logistica.leitor import ErroInstancia, gerar_instancia_sintetica, ler_vrplib, listar_instancias
+from logistica.leitor import LIMITE_CLIENTES, ErroInstancia, gerar_instancia_sintetica, ler_vrplib, listar_instancias
 from logistica.rede_viaria import arredondar
 from logistica.verificador import verificar
 
@@ -67,6 +67,14 @@ class TesteErros(unittest.TestCase):
     def test_dimensao_inconsistente(self):
         with self.assertRaises(ErroInstancia):
             ler_vrplib(self.escrever(self.base(dimensao=7)))
+        # acima do limite de clientes a instância é recusada antes de montar as matrizes n²
+        n = LIMITE_CLIENTES + 2
+        texto = ("NAME : grande\nTYPE : CVRP\nDIMENSION : %d\nCAPACITY : 10\nEDGE_WEIGHT_TYPE : EUC_2D\nNODE_COORD_SECTION\n" % n
+                 + "".join("%d %d %d\n" % (i + 1, i % 97, i // 97) for i in range(n)) + "DEMAND_SECTION\n"
+                 + "".join("%d %d\n" % (i + 1, 0 if i == 0 else 1) for i in range(n)) + "DEPOT_SECTION\n1\n-1\nEOF\n")
+        with self.assertRaises(ErroInstancia) as ctx:
+            ler_vrplib(self.escrever(texto))
+        self.assertIn("grande demais", str(ctx.exception))
 
     def test_demanda_maior_que_capacidade(self):
         with self.assertRaises(ErroInstancia):
