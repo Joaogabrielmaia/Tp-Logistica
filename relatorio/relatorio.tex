@@ -1,6 +1,10 @@
 \documentclass[12pt]{article}
 \usepackage{sbc-template}
 \usepackage{graphicx,url}
+% quebra de linha em qualquer letra ou número dentro de URLs longas (os links do Overleaf)
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\a\do\b\do\c\do\d\do\e\do\f\do\0\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9}
+\urldef{\linkrelatorio}\url{https://www.overleaf.com/project/6b00aac124b84befa2a1f30f/share#0c7dd67ecd3bebbe4c59f043ec5f13555ae226be6c33a0ae}
+\urldef{\linketapa}\url{https://www.overleaf.com/project/6b00ab082077d3cd4f1aaa57/share#fbafc3277976c50dfa71bcb1935806b180efb8e328b35b65}
 \IfFileExists{brazil.ldf}{\usepackage[brazil]{babel}}{\usepackage[english]{babel}\addto\captionsenglish{\renewcommand{\figurename}{Figura}\renewcommand{\tablename}{Tabela}\renewcommand{\refname}{Refer\^encias}}\hyphenpenalty=10000\exhyphenpenalty=10000}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -90,7 +94,7 @@ A Figura~\ref{fig:modos} mostra os modos. No \textbf{modo completo} há um arco 
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.8\linewidth]{../docs/diagramas/atividades.pdf}
+\includegraphics[width=0.72\linewidth]{../docs/diagramas/atividades.pdf}
 \caption{Diagrama de atividades do solver, da leitura da instância à verificação independente.}
 \label{fig:ativ}
 \end{figure}
@@ -106,7 +110,7 @@ As Figuras~\ref{fig:classes}, \ref{fig:casos} e~\ref{fig:ativ} mostram as classe
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=0.72\linewidth]{../docs/diagramas/sequencia.pdf}
+\includegraphics[width=0.66\linewidth]{../docs/diagramas/sequencia.pdf}
 \caption{Diagrama de sequência do cálculo de rotas pela interface.}
 \label{fig:seq}
 \end{figure}
@@ -133,7 +137,7 @@ Seja $n$ o número de clientes, $m$ o de arcos, $R$ o de rotas e $L$ o tamanho d
 
 \section{Implementação e interface}
 
-O código e o histórico de desenvolvimento estão em \url{https://github.com/Joaogabrielmaia/Tp-Logistica}. O sistema tem cerca de 4\,100 linhas (3\,100 em Python e 950 em HTML, CSS e JavaScript), sem dependências externas e com comentários curtos apenas nos pontos não óbvios dos algoritmos. O \texttt{heapq} da biblioteca padrão é só a fila de prioridade, uma estrutura de dados como uma lista; o grafo, o Dijkstra e o A* são nossos. O \texttt{numpy} aparece só em \texttt{scripts/figuras.py}, para a inclinação do gráfico de tempo deste relatório, fora da ferramenta. A Figura~\ref{fig:comp} mostra a separação em quatro grupos: modelagem e dados, algoritmos, interface e qualidade. A interface é uma página web servida localmente pela biblioteca padrão, e se comunica com o solver por uma API JSON que valida todas as entradas (tamanho de arquivo, limites de iterações, parâmetros inválidos, caminhos fora da pasta de dados). Pela linha de comando também é possível resolver instâncias e rodar os experimentos. Uma consulta à parte, na linha de comando e na aba Caminhos, roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices, no grafo de uma instância ou num grafo digitado, e todo erro conhecido aparece com o motivo e o que fazer, sem traceback.
+O código e o histórico de desenvolvimento estão em \url{https://github.com/Joaogabrielmaia/Tp-Logistica}. O vídeo de demonstração e o código LaTeX deste relatório e da Etapa~1 estão disponíveis on-line\footnote{Vídeo: \url{https://drive.google.com/file/d/1SvxjatBl41s2nDIDsEQI4UrWZUA8N25p/view}; relatório no Overleaf: \linkrelatorio; Etapa~1 no Overleaf: \linketapa.}. O sistema tem cerca de 4\,100 linhas (3\,100 em Python e 950 em HTML, CSS e JavaScript), sem dependências externas e com comentários curtos apenas nos pontos não óbvios dos algoritmos. O \texttt{heapq} da biblioteca padrão é só a fila de prioridade, uma estrutura de dados como uma lista; o grafo, o Dijkstra e o A* são nossos. O \texttt{numpy} aparece só em \texttt{scripts/figuras.py}, para a inclinação do gráfico de tempo deste relatório, fora da ferramenta. A Figura~\ref{fig:comp} mostra a separação em quatro grupos: modelagem e dados, algoritmos, interface e qualidade. A interface é uma página web servida localmente pela biblioteca padrão, e se comunica com o solver por uma API JSON que valida todas as entradas (tamanho de arquivo, limites de iterações, parâmetros inválidos, caminhos fora da pasta de dados). Pela linha de comando também é possível resolver instâncias e rodar os experimentos. Uma consulta à parte, na linha de comando e na aba Caminhos, roda BFS, DFS, Dijkstra, A*, Bellman-Ford e Floyd-Warshall entre dois vértices, no grafo de uma instância ou num grafo digitado, e todo erro conhecido aparece com o motivo e o que fazer, sem traceback.
 
 A Figura~\ref{fig:telas} mostra as telas, obtidas com a ferramenta em execução. O mapa desenha as rotas sobre o grafo, com prioridade alta e média destacadas; o cronograma mostra, para cada veículo, janelas de tempo, esperas e atendimentos; a tela de carga mostra a ocupação de cada veículo e a ordem de carregamento (o último cliente entregue é o primeiro a entrar); a convergência mostra a evolução do custo e a contribuição de cada etapa; a aba Caminhos compara os algoritmos entre dois vértices e destaca o caminho no grafo. Toda solução exibida traz o resultado da verificação independente.
 
