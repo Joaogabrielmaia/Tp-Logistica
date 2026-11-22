@@ -15,7 +15,7 @@ como um grafo dirigido ponderado. Escrita em Python, só com a biblioteca padrã
 | Overleaf: Etapa 1 | [abrir no Overleaf](https://www.overleaf.com/project/6b00ab082077d3cd4f1aaa57/share#fbafc3277976c50dfa71bcb1935806b180efb8e328b35b65) |
 | Zip com o LaTeX dos relatórios (pronto para o Overleaf) | [`entrega/latex_relatorios.zip`](entrega/latex_relatorios.zip) |
 | Slides da apresentação (PDF) | [`apresentacao/slides.pdf`](apresentacao/slides.pdf) |
-| Vídeo de demonstração (17:36) | [assistir no Google Drive](https://drive.google.com/file/d/14E-XHGWWgP_2Jd2CrQ2NCCuZWCP2FDVr/view?usp=sharing) · cópia em [`apresentacao/video_tp.mp4`](apresentacao/video_tp.mp4) |
+| Vídeo de demonstração (17:46) | [assistir no Google Drive](https://drive.google.com/file/d/14E-XHGWWgP_2Jd2CrQ2NCCuZWCP2FDVr/view?usp=sharing) · cópia em [`apresentacao/video_tp.mp4`](apresentacao/video_tp.mp4) |
 | Tutorial de uso | [`docs/tutorial.md`](docs/tutorial.md) |
 
 ## Como rodar em 1 minuto
